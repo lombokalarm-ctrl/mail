@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        color-scheme: light;
+    }
+
+    :root.dark {
+        color-scheme: dark;
+    }
+
+    html {
+        @apply scroll-smooth;
+    }
+
+    body {
+        @apply bg-slate-50 text-slate-900 antialiased selection:bg-blue-600/20 selection:text-slate-950 dark:bg-slate-950 dark:text-slate-100 dark:selection:bg-blue-400/30 dark:selection:text-white;
+        font-family: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    ::-webkit-scrollbar {
+        width: 11px;
+        height: 11px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-slate-100 dark:bg-slate-900;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply rounded-full bg-slate-300 dark:bg-slate-700;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-400 dark:bg-slate-600;
+    }
+}
+
+@layer components {
+    .panel-card {
+        @apply rounded-[2rem] border border-white/70 bg-white/90 p-6 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.25)] backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-[0_24px_60px_-30px_rgba(2,6,23,0.82)];
+    }
+
+    .metric-card {
+        @apply panel-card relative overflow-hidden p-6;
+    }
+
+    .metric-card::before {
+        @apply absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/70 to-transparent content-[''];
+    }
+
+    .metric-label {
+        @apply text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400;
+    }
+
+    .metric-value {
+        @apply mt-4 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-4xl;
+    }
+
+    .metric-hint {
+        @apply mt-3 text-sm text-slate-500 dark:text-slate-400;
+    }
+
+    .page-hero {
+        @apply rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-[0_30px_80px_-36px_rgba(59,130,246,0.4)] backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-[0_28px_80px_-38px_rgba(37,99,235,0.45)] sm:p-8;
+    }
+
+    .section-kicker {
+        @apply text-[11px] font-semibold uppercase tracking-[0.32em] text-blue-600 dark:text-blue-300;
+    }
+
+    .section-title {
+        @apply mt-3 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-4xl;
+    }
+
+    .section-copy {
+        @apply mt-3 max-w-3xl text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-[15px];
+    }
+
+    .nav-pill {
+        @apply rounded-full px-4 py-2.5 text-sm font-medium text-slate-600 transition duration-200 hover:bg-white hover:text-blue-600 hover:shadow-sm dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-300;
+    }
+
+    .nav-pill-active {
+        @apply bg-white text-blue-700 shadow-sm ring-1 ring-blue-100 dark:bg-slate-900 dark:text-blue-200 dark:ring-slate-800;
+    }
+
+    .mobile-nav-pill {
+        @apply block rounded-2xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-900;
+    }
+
+    .mail-row {
+        @apply flex items-center justify-between gap-4 rounded-[1.6rem] border border-slate-200/80 bg-slate-50/85 p-4 transition dark:border-slate-800/80 dark:bg-slate-950/60;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-slate-900/10 transition duration-200 hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-blue-600/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-500 dark:focus:ring-offset-slate-950;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white/90 px-5 py-3 text-sm font-medium text-slate-700 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:text-blue-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-slate-800 dark:bg-slate-900/85 dark:text-slate-200 dark:hover:border-blue-700 dark:hover:text-blue-300 dark:focus:ring-offset-slate-950;
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-300 dark:focus:ring-offset-slate-950;
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center justify-center rounded-2xl border border-rose-200 bg-white px-4 py-2.5 text-sm font-medium text-rose-600 transition duration-200 hover:-translate-y-0.5 hover:bg-rose-50 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 dark:border-rose-900/80 dark:bg-slate-950/70 dark:text-rose-300 dark:hover:bg-rose-950/30 dark:focus:ring-offset-slate-950;
+    }
+
+    .field-input {
+        @apply w-full rounded-2xl border border-slate-200 bg-slate-50/85 px-4 py-3 text-sm text-slate-900 outline-none ring-0 transition duration-200 placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(96,165,250,0.12)] dark:border-slate-800 dark:bg-slate-950/65 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:bg-slate-950;
+    }
+
+    .field-label {
+        @apply block text-sm font-medium text-slate-700 dark:text-slate-300;
+    }
+
+    .helper-text {
+        @apply text-sm leading-6 text-slate-500 dark:text-slate-400;
+    }
+
+    .status-badge {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+    }
+
+    .status-badge-blue {
+        @apply status-badge bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-200;
+    }
+
+    .status-badge-slate {
+        @apply status-badge bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300;
+    }
+
+    .status-badge-amber {
+        @apply status-badge bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-200;
+    }
+
+    .status-badge-emerald {
+        @apply status-badge bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-200;
+    }
+
+    .data-table {
+        @apply min-w-full border-separate border-spacing-y-3 text-sm;
+    }
+
+    .table-head {
+        @apply text-left text-[11px] uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400;
+    }
+
+    .table-row {
+        @apply rounded-[1.6rem] bg-slate-50/85 shadow-[0_8px_20px_-18px_rgba(15,23,42,0.35)] ring-1 ring-slate-200/80 transition hover:bg-white hover:ring-blue-200 dark:bg-slate-950/55 dark:ring-slate-800 dark:hover:bg-slate-900/85 dark:hover:ring-blue-900;
+    }
+
+    .table-cell {
+        @apply px-4 py-4 align-top;
+    }
+
+    .empty-state {
+        @apply rounded-[1.8rem] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-950/40 dark:text-slate-400;
+    }
+
+    .content-prose {
+        @apply max-w-none text-sm leading-7 text-slate-700 dark:text-slate-300;
+    }
+
+    .content-prose a {
+        @apply text-blue-600 underline decoration-blue-300 underline-offset-4 dark:text-blue-300;
+    }
+
+    .content-prose img {
+        @apply h-auto max-w-full rounded-2xl;
+    }
+
+    .content-prose table {
+        @apply w-full border-collapse;
+    }
+
+    .content-prose td,
+    .content-prose th {
+        @apply border border-slate-200 px-3 py-2 dark:border-slate-700;
+    }
+
+    .content-prose pre,
+    .content-prose code {
+        @apply rounded-xl bg-slate-100 px-1.5 py-0.5 text-[0.9em] dark:bg-slate-800;
+    }
+
+    .glass-banner {
+        @apply rounded-[1.8rem] border border-white/70 bg-white/80 p-5 shadow-[0_20px_60px_-34px_rgba(59,130,246,0.45)] backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-34px_rgba(37,99,235,0.42)];
+    }
+
+    .settings-section {
+        @apply panel-card p-5 sm:p-8;
+    }
+}

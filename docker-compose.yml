@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: apli-mail-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - apli_storage:/var/www/html/storage/app
+    networks:
+      - apli
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: apli-mail-nginx
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html:ro
+      - apli_storage:/var/www/html/storage/app
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - apli
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: apli-mail-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-apli_mail}
+      POSTGRES_USER: ${DB_USERNAME:-apli}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-apli_secret}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - apli
+
+  redis:
+    image: redis:7-alpine
+    container_name: apli-mail-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - apli
+
+volumes:
+  postgres_data:
+  redis_data:
+  apli_storage:
+
+networks:
+  apli:
+    driver: bridge
