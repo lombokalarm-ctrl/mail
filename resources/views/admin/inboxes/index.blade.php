@@ -8,8 +8,8 @@
             </div>
 
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.groups.index') }}" class="btn-secondary px-4 py-2.5">Kelola Group</a>
-                <a href="{{ route('admin.emails.index') }}" class="btn-primary px-4 py-2.5">Lihat Email</a>
+                <a href="{{ route('admin.groups.index', [], false) }}" class="btn-secondary px-4 py-2.5">Kelola Group</a>
+                <a href="{{ route('admin.emails.index', [], false) }}" class="btn-primary px-4 py-2.5">Lihat Email</a>
             </div>
         </div>
     </x-slot>
@@ -92,7 +92,7 @@
                                 Salin
                             </button>
                             <a href="{{ $inbox->viewer_url }}" target="_blank" class="btn-ghost px-3 py-2 text-xs">Buka</a>
-                            <form method="POST" action="{{ route('admin.inboxes.destroy', $inbox) }}" onsubmit="return confirm('Hapus inbox beserta seluruh email dan lampirannya?')">
+                            <form method="POST" action="{{ route('admin.inboxes.destroy', $inbox, false) }}" onsubmit="return confirm('Hapus inbox beserta seluruh email dan lampirannya?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn-danger px-3 py-2 text-xs">Hapus</button>
@@ -145,7 +145,7 @@
                         <a href="{{ $inbox->viewer_url }}" target="_blank" class="btn-primary w-full px-4 py-2 text-xs">Buka</a>
                     </div>
 
-                    <form method="POST" action="{{ route('admin.inboxes.destroy', $inbox) }}" onsubmit="return confirm('Hapus inbox beserta seluruh email dan lampirannya?')" class="mt-2">
+                    <form method="POST" action="{{ route('admin.inboxes.destroy', $inbox, false) }}" onsubmit="return confirm('Hapus inbox beserta seluruh email dan lampirannya?')" class="mt-2">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn-danger w-full px-4 py-2 text-xs">Hapus Inbox</button>

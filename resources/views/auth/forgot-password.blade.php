@@ -13,7 +13,7 @@
         <p class="mt-2 leading-6">Gunakan email admin yang terdaftar. Link reset akan dikirim jika akun ditemukan di sistem.</p>
     </div>
 
-    <form method="POST" action="{{ route('password.email') }}" class="auth-form">
+    <form method="POST" action="{{ route('password.email', [], false) }}" class="auth-form">
         @csrf
 
         <div>

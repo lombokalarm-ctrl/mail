@@ -14,7 +14,7 @@
         <p class="mt-2 leading-6">Gunakan kombinasi huruf besar, huruf kecil, angka, dan simbol agar akun admin lebih aman.</p>
     </div>
 
-    <form method="post" action="{{ route('password.update') }}" class="auth-form mt-6">
+    <form method="post" action="{{ route('password.update', [], false) }}" class="auth-form mt-6">
         @csrf
         @method('put')
 

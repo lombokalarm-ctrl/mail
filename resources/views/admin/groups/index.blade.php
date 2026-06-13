@@ -8,8 +8,8 @@
             </div>
 
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.inboxes.index') }}" class="btn-secondary px-4 py-2.5">Lihat Semua Inbox</a>
-                <a href="{{ route('admin.emails.index') }}" class="btn-primary px-4 py-2.5">Buka Email</a>
+                <a href="{{ route('admin.inboxes.index', [], false) }}" class="btn-secondary px-4 py-2.5">Lihat Semua Inbox</a>
+                <a href="{{ route('admin.emails.index', [], false) }}" class="btn-primary px-4 py-2.5">Buka Email</a>
             </div>
         </div>
     </x-slot>
@@ -36,7 +36,7 @@
                     <span class="status-badge-blue">{{ $groups->total() }} group</span>
                 </div>
 
-                <form method="POST" action="{{ route('admin.groups.store') }}" class="mt-6 grid gap-4">
+                <form method="POST" action="{{ route('admin.groups.store', [], false) }}" class="mt-6 grid gap-4">
                     @csrf
 
                     <div class="grid gap-4 md:grid-cols-2">
@@ -74,7 +74,7 @@
                     <span class="status-badge-slate">Quick Create</span>
                 </div>
 
-                <form method="POST" action="{{ route('admin.inboxes.store') }}" class="mt-6 grid gap-4">
+                <form method="POST" action="{{ route('admin.inboxes.store', [], false) }}" class="mt-6 grid gap-4">
                     @csrf
 
                     <div class="grid gap-4 md:grid-cols-2">
@@ -130,7 +130,7 @@
                                     <span class="status-badge-slate">Token: {{ $group->viewer_token }}</span>
                                 </div>
 
-                                <form method="POST" action="{{ route('admin.groups.update', $group) }}" class="grid gap-4">
+                                <form method="POST" action="{{ route('admin.groups.update', $group, false) }}" class="grid gap-4">
                                     @csrf
                                     @method('PATCH')
 
@@ -159,7 +159,7 @@
                                     </div>
                                 </form>
 
-                                <form method="POST" action="{{ route('admin.groups.destroy', $group) }}" onsubmit="return confirm('Hapus group beserta seluruh inbox, email, dan lampirannya?')">
+                                <form method="POST" action="{{ route('admin.groups.destroy', $group, false) }}" onsubmit="return confirm('Hapus group beserta seluruh inbox, email, dan lampirannya?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn-danger px-4 py-2.5 text-sm">Hapus Group</button>
@@ -176,7 +176,7 @@
                                         <span class="status-badge-blue">{{ $group->viewer_token }}</span>
                                     </div>
 
-                                    <form method="POST" action="{{ route('admin.inboxes.store') }}" class="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
+                                    <form method="POST" action="{{ route('admin.inboxes.store', [], false) }}" class="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
                                         @csrf
                                         <input type="hidden" name="group_id" value="{{ $group->id }}" />
                                         <input type="text" name="inbox_name" placeholder="Contoh: sales-acme" class="field-input" required />
@@ -192,7 +192,7 @@
                                                 <span class="status-badge-slate">{{ $inbox->inbox_name }}@{{ config('apli_mail.domain') }}</span>
                                             </div>
 
-                                            <form method="POST" action="{{ route('admin.inboxes.update', $inbox) }}" class="mt-4 grid gap-4">
+                                            <form method="POST" action="{{ route('admin.inboxes.update', $inbox, false) }}" class="mt-4 grid gap-4">
                                                 @csrf
                                                 @method('PATCH')
 
@@ -230,7 +230,7 @@
                                                     Salin Viewer URL
                                                 </button>
                                                 <a href="{{ $inbox->viewer_url }}" target="_blank" class="btn-ghost px-4 py-2.5 text-sm">Buka Viewer</a>
-                                                <form method="POST" action="{{ route('admin.inboxes.destroy', $inbox) }}" onsubmit="return confirm('Hapus inbox beserta seluruh email dan lampirannya?')">
+                                                <form method="POST" action="{{ route('admin.inboxes.destroy', $inbox, false) }}" onsubmit="return confirm('Hapus inbox beserta seluruh email dan lampirannya?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn-danger px-4 py-2.5 text-sm">Hapus Inbox</button>

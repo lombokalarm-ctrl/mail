@@ -11,7 +11,7 @@
         <p class="mt-2 leading-6">Langkah ini melindungi perubahan sensitif pada akun dan pengaturan admin.</p>
     </div>
 
-    <form method="POST" action="{{ route('password.confirm') }}" class="auth-form">
+    <form method="POST" action="{{ route('password.confirm', [], false) }}" class="auth-form">
         @csrf
 
         <div>

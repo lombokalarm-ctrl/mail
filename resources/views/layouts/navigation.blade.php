@@ -1,7 +1,7 @@
 <nav x-data="{ open: false }" class="sticky top-0 z-40 border-b border-white/60 bg-white/60 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/50">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div class="flex items-center gap-3">
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+            <a href="{{ route('dashboard', [], false) }}" class="flex items-center gap-3">
                 <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 text-sm font-bold text-white shadow-lg shadow-blue-600/25">AM</span>
                 <div>
                     <p class="text-sm font-semibold text-slate-900 dark:text-white">APLI Mail</p>
@@ -11,11 +11,11 @@
         </div>
 
         <div class="hidden items-center gap-2 rounded-full border border-white/70 bg-slate-100/65 px-2 py-2 dark:border-slate-800 dark:bg-slate-900/65 md:flex">
-            <a href="{{ route('dashboard') }}" class="nav-pill {{ request()->routeIs('dashboard') ? 'nav-pill-active' : '' }}">Dashboard</a>
-            <a href="{{ route('admin.groups.index') }}" class="nav-pill {{ request()->routeIs('admin.groups.*') ? 'nav-pill-active' : '' }}">Group</a>
-            <a href="{{ route('admin.inboxes.index') }}" class="nav-pill {{ request()->routeIs('admin.inboxes.*') ? 'nav-pill-active' : '' }}">Inbox</a>
-            <a href="{{ route('admin.emails.index') }}" class="nav-pill {{ request()->routeIs('admin.emails.*') ? 'nav-pill-active' : '' }}">Email</a>
-            <a href="{{ route('profile.edit') }}" class="nav-pill {{ request()->routeIs('profile.*') ? 'nav-pill-active' : '' }}">Profil</a>
+            <a href="{{ route('dashboard', [], false) }}" class="nav-pill {{ request()->routeIs('dashboard') ? 'nav-pill-active' : '' }}">Dashboard</a>
+            <a href="{{ route('admin.groups.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.groups.*') ? 'nav-pill-active' : '' }}">Group</a>
+            <a href="{{ route('admin.inboxes.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.inboxes.*') ? 'nav-pill-active' : '' }}">Inbox</a>
+            <a href="{{ route('admin.emails.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.emails.*') ? 'nav-pill-active' : '' }}">Email</a>
+            <a href="{{ route('profile.edit', [], false) }}" class="nav-pill {{ request()->routeIs('profile.*') ? 'nav-pill-active' : '' }}">Profil</a>
         </div>
 
         <div class="hidden items-center gap-3 md:flex">
@@ -28,7 +28,7 @@
                 <p class="text-xs text-slate-500 dark:text-slate-400">{{ Auth::user()->email }}</p>
             </div>
 
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout', [], false) }}">
                 @csrf
                 <button type="submit" class="btn-primary px-4 py-2.5 text-sm">
                     Keluar
@@ -50,13 +50,13 @@
                 <p class="text-sm font-medium text-slate-900 dark:text-white">{{ Auth::user()->name }}</p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">{{ Auth::user()->email }}</p>
             </div>
-            <a href="{{ route('dashboard') }}" class="mobile-nav-pill">Dashboard</a>
-            <a href="{{ route('admin.groups.index') }}" class="mobile-nav-pill">Group</a>
-            <a href="{{ route('admin.inboxes.index') }}" class="mobile-nav-pill">Inbox</a>
-            <a href="{{ route('admin.emails.index') }}" class="mobile-nav-pill">Email</a>
-            <a href="{{ route('profile.edit') }}" class="mobile-nav-pill">Profil</a>
+            <a href="{{ route('dashboard', [], false) }}" class="mobile-nav-pill">Dashboard</a>
+            <a href="{{ route('admin.groups.index', [], false) }}" class="mobile-nav-pill">Group</a>
+            <a href="{{ route('admin.inboxes.index', [], false) }}" class="mobile-nav-pill">Inbox</a>
+            <a href="{{ route('admin.emails.index', [], false) }}" class="mobile-nav-pill">Email</a>
+            <a href="{{ route('profile.edit', [], false) }}" class="mobile-nav-pill">Profil</a>
             <button type="button" data-theme-toggle class="mobile-nav-pill w-full text-left">Mode Gelap</button>
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout', [], false) }}">
                 @csrf
                 <button type="submit" class="mobile-nav-pill w-full text-left text-rose-600 dark:text-rose-300">Keluar</button>
             </form>

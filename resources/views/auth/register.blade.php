@@ -12,7 +12,7 @@
         <p class="mt-2 leading-6">Gunakan halaman ini hanya jika alur registrasi memang diaktifkan kembali oleh administrator sistem.</p>
     </div>
 
-    <form method="POST" action="{{ route('register') }}" class="auth-form">
+    <form method="POST" action="{{ route('register', [], false) }}" class="auth-form">
         @csrf
 
         <div>

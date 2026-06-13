@@ -14,11 +14,11 @@
         <p class="mt-2 leading-6">Email ini juga dipakai untuk alur reset password, verifikasi, dan audit akses admin ke dashboard.</p>
     </div>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+    <form id="send-verification" method="post" action="{{ route('verification.send', [], false) }}">
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="auth-form mt-6">
+    <form method="post" action="{{ route('profile.update', [], false) }}" class="auth-form mt-6">
         @csrf
         @method('patch')
 

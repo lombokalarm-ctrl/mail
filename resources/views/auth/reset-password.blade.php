@@ -11,7 +11,7 @@
         <p class="mt-2 leading-6">Gunakan password baru yang belum pernah dipakai pada layanan lain untuk menjaga keamanan panel admin.</p>
     </div>
 
-    <form method="POST" action="{{ route('password.store') }}" class="auth-form">
+    <form method="POST" action="{{ route('password.store', [], false) }}" class="auth-form">
         @csrf
 
         <input type="hidden" name="token" value="{{ $request->route('token') }}">

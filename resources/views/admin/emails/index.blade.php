@@ -81,8 +81,8 @@
                             <div class="gmail-row-time {{ $loop->first ? 'gmail-row-time-active' : '' }}">
                                 {{ $email->received_at?->format('d M Y H:i') }}
                             </div>
-                            <a href="{{ route('viewer.show', ['viewerKey' => $email->inbox->viewer_key, 'email' => $email]) }}" target="_blank" class="btn-ghost px-3 py-2 text-xs">Buka</a>
-                            <form method="POST" action="{{ route('admin.emails.destroy', $email) }}" onsubmit="return confirm('Hapus email dan seluruh lampirannya?')">
+                            <a href="{{ route('viewer.show', ['viewerKey' => $email->inbox->viewer_key, 'email' => $email], false) }}" target="_blank" class="btn-ghost px-3 py-2 text-xs">Buka</a>
+                            <form method="POST" action="{{ route('admin.emails.destroy', $email, false) }}" onsubmit="return confirm('Hapus email dan seluruh lampirannya?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn-danger px-3 py-2 text-xs">Hapus</button>
@@ -123,8 +123,8 @@
                         </div>
 
                         <div class="grid w-full gap-2 sm:flex sm:w-auto sm:flex-wrap">
-                            <a href="{{ route('viewer.show', ['viewerKey' => $email->inbox->viewer_key, 'email' => $email]) }}" target="_blank" class="btn-secondary w-full px-4 py-2 text-xs sm:w-auto">Lihat Detail</a>
-                            <form method="POST" action="{{ route('admin.emails.destroy', $email) }}" onsubmit="return confirm('Hapus email dan seluruh lampirannya?')">
+                            <a href="{{ route('viewer.show', ['viewerKey' => $email->inbox->viewer_key, 'email' => $email], false) }}" target="_blank" class="btn-secondary w-full px-4 py-2 text-xs sm:w-auto">Lihat Detail</a>
+                            <form method="POST" action="{{ route('admin.emails.destroy', $email, false) }}" onsubmit="return confirm('Hapus email dan seluruh lampirannya?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn-danger w-full px-4 py-2 text-xs sm:w-auto">Hapus</button>

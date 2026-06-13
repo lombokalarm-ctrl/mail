@@ -18,7 +18,7 @@
     @endif
 
     <div class="auth-actions mt-4">
-        <form method="POST" action="{{ route('verification.send') }}">
+        <form method="POST" action="{{ route('verification.send', [], false) }}">
             @csrf
 
             <div>
@@ -28,7 +28,7 @@
             </div>
         </form>
 
-        <form method="POST" action="{{ route('logout') }}">
+        <form method="POST" action="{{ route('logout', [], false) }}">
             @csrf
 
             <button type="submit" class="btn-ghost">
