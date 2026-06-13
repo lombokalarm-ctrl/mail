@@ -127,6 +127,10 @@
         @apply text-sm leading-6 text-slate-500 dark:text-slate-400;
     }
 
+    .toolbar-group {
+        @apply flex flex-wrap gap-3;
+    }
+
     .status-badge {
         @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
     }
@@ -167,6 +171,34 @@
         @apply rounded-[1.8rem] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-950/40 dark:text-slate-400;
     }
 
+    .pagination-shell {
+        @apply flex flex-col gap-4 rounded-[1.8rem] border border-white/70 bg-white/80 p-4 shadow-[0_16px_40px_-28px_rgba(15,23,42,0.28)] backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-[0_16px_40px_-28px_rgba(2,6,23,0.9)] sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .pagination-summary {
+        @apply text-sm text-slate-500 dark:text-slate-400;
+    }
+
+    .pagination-summary strong {
+        @apply font-semibold text-slate-900 dark:text-white;
+    }
+
+    .pager-group {
+        @apply inline-flex items-center gap-2;
+    }
+
+    .pager-link {
+        @apply inline-flex min-h-11 min-w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white/90 px-4 text-sm font-medium text-slate-600 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:text-blue-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-300 dark:hover:border-blue-700 dark:hover:text-blue-300 dark:focus:ring-offset-slate-950;
+    }
+
+    .pager-link-active {
+        @apply bg-slate-900 text-white shadow-lg shadow-slate-900/15 ring-0 hover:bg-blue-600 hover:text-white dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500;
+    }
+
+    .pager-link-disabled {
+        @apply cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 shadow-none hover:translate-y-0 hover:border-slate-200 hover:text-slate-400 hover:shadow-none dark:border-slate-800 dark:bg-slate-900 dark:text-slate-600 dark:hover:border-slate-800 dark:hover:text-slate-600;
+    }
+
     .content-prose {
         @apply max-w-none text-sm leading-7 text-slate-700 dark:text-slate-300;
     }
@@ -199,5 +231,21 @@
 
     .settings-section {
         @apply panel-card p-5 sm:p-8;
+    }
+
+    .toast-stack {
+        @apply pointer-events-none fixed inset-x-4 bottom-4 z-[70] flex flex-col items-end gap-3 sm:inset-x-auto sm:right-6 sm:w-full sm:max-w-sm;
+    }
+
+    .toast {
+        @apply pointer-events-auto w-full rounded-[1.4rem] border border-white/70 bg-slate-950/92 px-4 py-3 text-sm font-medium text-white shadow-[0_18px_50px_-24px_rgba(15,23,42,0.65)] backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-900/95;
+    }
+
+    .toast-success {
+        @apply border-emerald-400/30 bg-emerald-600/95;
+    }
+
+    .toast-error {
+        @apply border-rose-400/30 bg-rose-600/95;
     }
 }

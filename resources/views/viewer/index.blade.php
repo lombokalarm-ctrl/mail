@@ -24,9 +24,16 @@
                 </div>
             </div>
 
-            <div class="flex flex-wrap gap-3">
+            <div class="toolbar-group">
                 <button type="button" data-theme-toggle class="btn-secondary px-4 py-2.5">Mode Gelap</button>
-                <button type="button" onclick="navigator.clipboard.writeText('{{ $inbox->inbox_name . '@' . config('apli_mail.domain') }}')" class="btn-primary px-4 py-2.5">Salin Alamat</button>
+                <button
+                    type="button"
+                    data-copy-text="{{ $inbox->inbox_name . '@' . config('apli_mail.domain') }}"
+                    data-copy-success="Alamat inbox berhasil disalin."
+                    class="btn-primary px-4 py-2.5"
+                >
+                    Salin Alamat
+                </button>
             </div>
         </div>
 
@@ -42,8 +49,20 @@
 
                 <div class="mt-8 space-y-4">
                     <div class="glass-banner border-slate-200/80 bg-white/80 shadow-none dark:border-slate-800/80 dark:bg-slate-950/50">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Viewer URL</p>
-                        <p class="mt-2 break-all text-sm text-slate-700 dark:text-slate-300">{{ route('viewer.index', ['viewerKey' => $viewerKey], false) }}</p>
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Viewer URL</p>
+                                <p class="mt-2 break-all text-sm text-slate-700 dark:text-slate-300">{{ route('viewer.index', ['viewerKey' => $viewerKey], false) }}</p>
+                            </div>
+                            <button
+                                type="button"
+                                data-copy-text="{{ route('viewer.index', ['viewerKey' => $viewerKey], false) }}"
+                                data-copy-success="Viewer URL berhasil disalin."
+                                class="btn-secondary shrink-0 px-3 py-2 text-xs"
+                            >
+                                Salin
+                            </button>
+                        </div>
                     </div>
                     <div class="glass-banner border-slate-200/80 bg-white/80 shadow-none dark:border-slate-800/80 dark:bg-slate-950/50">
                         <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Urutan</p>
