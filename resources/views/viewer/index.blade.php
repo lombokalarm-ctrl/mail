@@ -71,15 +71,79 @@
                 </div>
             </aside>
 
-            <section class="panel-card">
+            <section class="panel-card overflow-hidden">
                 <div class="mb-5 flex items-center justify-between">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-950 dark:text-white">Daftar Email</h2>
-                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Klik email untuk membuka detail lengkap dan unduh lampiran.</p>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Tampilan inbox ringkas seperti mailbox modern, dengan pengirim, subject, preview, dan waktu di satu baris.</p>
                     </div>
                 </div>
 
-                <div class="space-y-3">
+                <div class="hidden overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white/80 dark:border-slate-800/80 dark:bg-slate-950/50 md:block">
+                    <div class="gmail-toolbar">
+                        <div class="gmail-toolbar-left">
+                            <span class="gmail-toolbar-dot" aria-hidden="true"></span>
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $emails->count() }} email di halaman ini</span>
+                            @if ($search)
+                                <span class="status-badge-blue">Filter aktif: {{ $search }}</span>
+                            @else
+                                <span class="status-badge-slate">Mode inbox ringkas</span>
+                            @endif
+                        </div>
+
+                        <div class="gmail-toolbar-right">
+                            <span class="status-badge-slate">Urut terbaru</span>
+                            <a href="{{ route('viewer.index', ['viewerKey' => $viewerKey, 'q' => $search], false) }}" class="btn-ghost px-3 py-2 text-xs">Muat Ulang</a>
+                        </div>
+                    </div>
+
+                    <div class="gmail-table-header">
+                        <div>Status</div>
+                        <div>Pengirim</div>
+                        <div>Email & Ringkasan</div>
+                        <div class="text-right">Waktu</div>
+                    </div>
+
+                    <div class="divide-y divide-slate-200/80 dark:divide-slate-800/80">
+                        @forelse ($emails as $email)
+                            <a href="{{ route('viewer.show', ['viewerKey' => $viewerKey, 'email' => $email], false) }}" class="gmail-row">
+                                <div class="gmail-row-leading">
+                                    <span class="gmail-select-shell" aria-hidden="true"></span>
+                                    <span class="gmail-star-shell {{ $loop->first ? 'gmail-star-shell-active' : '' }}" aria-hidden="true"></span>
+                                </div>
+
+                                <div class="gmail-row-sender">
+                                    <p class="truncate font-semibold text-slate-900 dark:text-slate-100">{{ $email->sender_name ?: $email->sender_email }}</p>
+                                    <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ $email->sender_email }}</p>
+                                </div>
+
+                                <div class="gmail-row-content">
+                                    <div class="min-w-0">
+                                        <div class="flex min-w-0 items-center gap-2">
+                                            <p class="gmail-row-subject">{{ $email->subject ?: '(Tanpa Subjek)' }}</p>
+                                            @if ($email->attachments->isNotEmpty())
+                                                <span class="status-badge-amber shrink-0 text-[10px]">{{ $email->attachments->count() }} lampiran</span>
+                                            @endif
+                                        </div>
+                                        <p class="gmail-row-preview">
+                                            {{ \Illuminate\Support\Str::limit($email->body_text ?: strip_tags($email->body_html), 180) }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="gmail-row-time {{ $loop->first ? 'gmail-row-time-active' : '' }}">
+                                    {{ $email->received_at?->format('d M Y H:i') }}
+                                </div>
+                            </a>
+                        @empty
+                            <div class="empty-state m-4">
+                                Belum ada email pada inbox ini.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <div class="space-y-3 md:hidden">
                     @forelse ($emails as $email)
                         <a href="{{ route('viewer.show', ['viewerKey' => $viewerKey, 'email' => $email], false) }}" class="block rounded-[1.8rem] border border-white/70 bg-white/90 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_18px_40px_-26px_rgba(59,130,246,0.42)] dark:border-slate-800 dark:bg-slate-950/60 dark:hover:border-blue-800 dark:hover:bg-slate-900">
                             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">

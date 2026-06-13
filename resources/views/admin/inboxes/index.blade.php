@@ -9,7 +9,7 @@
         </div>
     </x-slot>
 
-    <section class="panel-card">
+    <section class="panel-card overflow-hidden">
         <div class="admin-toolbar">
             <form method="GET" class="flex flex-1 flex-col gap-4 md:flex-row">
                 <div class="flex-1">
@@ -24,6 +24,81 @@
                 @if ($search)
                     <span class="status-badge-slate">Filter: {{ $search }}</span>
                 @endif
+            </div>
+        </div>
+
+        <div class="mt-6 hidden overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white/80 dark:border-slate-800/80 dark:bg-slate-950/50 md:block">
+            <div class="gmail-toolbar">
+                <div class="gmail-toolbar-left">
+                    <span class="gmail-toolbar-dot" aria-hidden="true"></span>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $inboxes->count() }} inbox di halaman ini</span>
+                    @if ($search)
+                        <span class="status-badge-blue">Filter aktif: {{ $search }}</span>
+                    @else
+                        <span class="status-badge-slate">Catch-all mailbox</span>
+                    @endif
+                </div>
+
+                <div class="gmail-toolbar-right">
+                    <span class="status-badge-slate">Inbox admin</span>
+                </div>
+            </div>
+
+            <div class="gmail-table-header">
+                <div>Status</div>
+                <div>Inbox</div>
+                <div>Email & Viewer</div>
+                <div class="text-right">Dibuat</div>
+            </div>
+
+            <div class="divide-y divide-slate-200/80 dark:divide-slate-800/80">
+                @forelse ($inboxes as $inbox)
+                    <div class="gmail-row">
+                        <div class="gmail-row-leading">
+                            <span class="gmail-select-shell" aria-hidden="true"></span>
+                            <span class="gmail-star-shell {{ $loop->first ? 'gmail-star-shell-active' : '' }}" aria-hidden="true"></span>
+                        </div>
+
+                        <div class="gmail-row-sender">
+                            <p class="truncate font-semibold text-slate-900 dark:text-slate-100">{{ $inbox->inbox_name }}</p>
+                            <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ $inbox->inbox_name . '@' . config('apli_mail.domain') }}</p>
+                        </div>
+
+                        <div class="gmail-row-content">
+                            <div class="min-w-0">
+                                <div class="flex min-w-0 items-center gap-2">
+                                    <p class="gmail-row-subject">Viewer catch-all aktif</p>
+                                    <span class="status-badge-blue shrink-0 text-[10px]">{{ $inbox->emails_count }} email</span>
+                                </div>
+                                <p class="gmail-row-preview">{{ $inbox->viewer_url }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end gap-2">
+                            <div class="gmail-row-time {{ $loop->first ? 'gmail-row-time-active' : '' }}">
+                                {{ $inbox->created_at?->format('d M Y H:i') }}
+                            </div>
+                            <button
+                                type="button"
+                                data-copy-text="{{ $inbox->viewer_url }}"
+                                data-copy-success="Viewer URL inbox berhasil disalin."
+                                class="btn-ghost px-3 py-2 text-xs"
+                            >
+                                Salin
+                            </button>
+                            <a href="{{ $inbox->viewer_url }}" target="_blank" class="btn-ghost px-3 py-2 text-xs">Buka</a>
+                            <form method="POST" action="{{ route('admin.inboxes.destroy', $inbox) }}" onsubmit="return confirm('Hapus inbox beserta seluruh email dan lampirannya?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-danger px-3 py-2 text-xs">Hapus</button>
+                            </form>
+                        </div>
+                    </div>
+                @empty
+                    <div class="empty-state m-4">
+                        Belum ada inbox yang cocok dengan pencarian.
+                    </div>
+                @endforelse
             </div>
         </div>
 
@@ -72,67 +147,6 @@
                     Belum ada inbox yang cocok dengan pencarian.
                 </div>
             @endforelse
-        </div>
-
-        <div class="mt-6 hidden overflow-x-auto md:block">
-            <table class="data-table">
-                <thead>
-                    <tr class="table-head">
-                        <th class="px-4 pb-2">Inbox</th>
-                        <th class="px-4 pb-2">Viewer URL</th>
-                        <th class="px-4 pb-2">Jumlah Email</th>
-                        <th class="px-4 pb-2">Dibuat</th>
-                        <th class="px-4 pb-2 text-right">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($inboxes as $inbox)
-                        <tr class="table-row">
-                            <td class="table-cell">
-                                <p class="font-semibold text-slate-900 dark:text-white">{{ $inbox->inbox_name }}</p>
-                                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $inbox->inbox_name . '@' . config('apli_mail.domain') }}</p>
-                            </td>
-                            <td class="table-cell">
-                                <div class="flex items-center gap-2">
-                                    <a href="{{ $inbox->viewer_url }}" target="_blank" class="text-sm text-blue-600 hover:text-blue-500">{{ $inbox->viewer_url }}</a>
-                                    <button
-                                        type="button"
-                                        data-copy-text="{{ $inbox->viewer_url }}"
-                                        data-copy-success="Viewer URL inbox berhasil disalin."
-                                        class="btn-secondary shrink-0 px-3 py-2 text-xs"
-                                    >
-                                        Salin
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="table-cell">
-                                <span class="status-badge-blue">
-                                    {{ $inbox->emails_count }} email
-                                </span>
-                            </td>
-                            <td class="table-cell text-slate-600 dark:text-slate-300">
-                                {{ $inbox->created_at?->format('d M Y H:i') }}
-                            </td>
-                            <td class="table-cell text-right">
-                                <div class="flex justify-end gap-2">
-                                    <a href="{{ $inbox->viewer_url }}" target="_blank" class="btn-secondary px-4 py-2 text-xs">Buka</a>
-                                    <form method="POST" action="{{ route('admin.inboxes.destroy', $inbox) }}" onsubmit="return confirm('Hapus inbox beserta seluruh email dan lampirannya?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-danger px-4 py-2 text-xs">Hapus</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="empty-state">
-                                Belum ada inbox yang cocok dengan pencarian.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
         </div>
 
         <div class="mt-6">

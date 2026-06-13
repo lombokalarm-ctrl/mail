@@ -219,6 +219,106 @@
         @apply px-4 py-4 align-top;
     }
 
+    .gmail-toolbar {
+        @apply flex items-center justify-between gap-4 border-b border-slate-200/80 bg-white/70 px-5 py-3 dark:border-slate-800/80 dark:bg-slate-950/40;
+    }
+
+    .gmail-toolbar-left {
+        @apply flex min-w-0 items-center gap-3;
+    }
+
+    .gmail-toolbar-right {
+        @apply flex items-center gap-2;
+    }
+
+    .gmail-toolbar-dot {
+        @apply inline-flex h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-500;
+    }
+
+    .gmail-table-header {
+        @apply grid grid-cols-[auto_minmax(0,1.05fr)_minmax(0,2.35fr)_auto] gap-4 bg-slate-50/90 px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500 dark:bg-slate-900/80 dark:text-slate-400;
+    }
+
+    .gmail-row {
+        @apply grid grid-cols-[auto_minmax(0,1.05fr)_minmax(0,2.35fr)_auto] items-center gap-4 px-5 py-3.5 transition duration-150 hover:bg-slate-50 dark:hover:bg-slate-900/70;
+    }
+
+    .gmail-row-leading {
+        @apply flex items-center gap-3;
+    }
+
+    .gmail-select-shell {
+        @apply inline-flex h-4 w-4 rounded border border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-950;
+    }
+
+    .gmail-star-shell {
+        @apply inline-flex h-2.5 w-2.5 rounded-full bg-slate-300 dark:bg-slate-700;
+    }
+
+    .gmail-star-shell-active {
+        @apply bg-amber-400 dark:bg-amber-300;
+    }
+
+    .gmail-row-sender {
+        @apply min-w-0;
+    }
+
+    .gmail-row-content {
+        @apply min-w-0;
+    }
+
+    .gmail-row-subject {
+        @apply truncate text-sm font-semibold text-slate-900 dark:text-slate-100;
+    }
+
+    .gmail-row-preview {
+        @apply mt-1 truncate text-sm text-slate-500 dark:text-slate-400;
+    }
+
+    .gmail-row-time {
+        @apply shrink-0 text-right text-xs font-medium text-slate-500 dark:text-slate-400;
+    }
+
+    .gmail-row-time-active {
+        @apply text-slate-800 dark:text-slate-100;
+    }
+
+    .gmail-reader-toolbar {
+        @apply flex items-center justify-between gap-4 border-b border-slate-200/80 bg-white/70 px-6 py-4 dark:border-slate-800/80 dark:bg-slate-950/40;
+    }
+
+    .gmail-reader-toolbar-left {
+        @apply flex min-w-0 items-center gap-3;
+    }
+
+    .gmail-reader-toolbar-right {
+        @apply flex items-center gap-2;
+    }
+
+    .gmail-message-header {
+        @apply flex items-start gap-4;
+    }
+
+    .gmail-message-avatar {
+        @apply inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700 dark:bg-blue-950/60 dark:text-blue-200;
+    }
+
+    .gmail-message-date {
+        @apply shrink-0 text-sm font-medium text-slate-500 dark:text-slate-400;
+    }
+
+    .gmail-message-body {
+        @apply border-t border-slate-200/80 pt-8 dark:border-slate-800/80;
+    }
+
+    .gmail-section-title {
+        @apply text-lg font-semibold text-slate-950 dark:text-white;
+    }
+
+    .gmail-attachment-card {
+        @apply flex items-center justify-between gap-4 rounded-[1.4rem] border border-slate-200/80 bg-slate-50/80 p-4 transition hover:border-blue-200 hover:bg-white dark:border-slate-800/80 dark:bg-slate-950/55 dark:hover:border-blue-800 dark:hover:bg-slate-900;
+    }
+
     .empty-state {
         @apply rounded-[1.8rem] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-950/40 dark:text-slate-400;
     }
