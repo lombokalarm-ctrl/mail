@@ -16,11 +16,13 @@ class InboxController extends Controller
 {
     public function index(Request $request): View
     {
+        $user = $request->user();
         $search = trim((string) $request->string('q'));
 
         $inboxes = Inbox::query()
             ->with('group')
             ->withCount('emails')
+            ->when($user->isGroupAdmin(), fn ($query) => $query->where('group_id', $user->group_id))
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($nested) use ($search): void {
                     $nested
@@ -39,6 +41,9 @@ class InboxController extends Controller
 
         return view('admin.inboxes.index', [
             'inboxes' => $inboxes,
+            'groupOptions' => $user->isSaasAdmin()
+                ? Group::query()->orderBy('name')->get(['id', 'name'])
+                : Group::query()->whereKey($user->group_id)->get(['id', 'name']),
             'search' => $search,
         ]);
     }
@@ -51,9 +56,11 @@ class InboxController extends Controller
         ]);
 
         $normalized = strtolower(trim($data['inbox_name']));
+        $user = $request->user();
+        $groupId = $user->isGroupAdmin() ? $user->group_id : (int) $data['group_id'];
 
         Inbox::query()->create([
-            'group_id' => (int) $data['group_id'],
+            'group_id' => $groupId,
             'inbox_name' => $normalized,
             'slug' => $this->generateUniqueSlug($normalized),
         ]);
@@ -63,28 +70,33 @@ class InboxController extends Controller
 
     public function update(Request $request, Inbox $inbox): RedirectResponse
     {
+        $this->ensureInboxAccess($request, $inbox);
+
         $data = $request->validate([
             'group_id' => ['required', 'exists:groups,id'],
             'inbox_name' => ['required', 'string', 'max:255', Rule::unique('inboxes', 'inbox_name')->ignore($inbox->id)],
         ]);
 
+        $user = $request->user();
         $normalized = strtolower(trim($data['inbox_name']));
         $slug = $normalized === $inbox->inbox_name
             ? $inbox->slug
             : $this->generateUniqueSlug($normalized, $inbox->id);
+        $groupId = $user->isGroupAdmin() ? $user->group_id : (int) $data['group_id'];
 
         $inbox->forceFill([
-            'group_id' => (int) $data['group_id'],
+            'group_id' => $groupId,
             'inbox_name' => $normalized,
             'slug' => $slug,
-            'access_token' => Group::query()->whereKey($data['group_id'])->value('viewer_token'),
+            'access_token' => Group::query()->whereKey($groupId)->value('viewer_token'),
         ])->save();
 
         return back()->with('status', 'Inbox berhasil diperbarui.');
     }
 
-    public function destroy(Inbox $inbox, EmailMaintenanceService $maintenance): RedirectResponse
+    public function destroy(Request $request, Inbox $inbox, EmailMaintenanceService $maintenance): RedirectResponse
     {
+        $this->ensureInboxAccess($request, $inbox);
         $maintenance->deleteInbox($inbox);
 
         return back()->with('status', 'Inbox berhasil dihapus.');
@@ -112,5 +124,14 @@ class InboxController extends Controller
         }
 
         return $candidate;
+    }
+
+    protected function ensureInboxAccess(Request $request, Inbox $inbox): void
+    {
+        $user = $request->user();
+
+        if ($user->isGroupAdmin()) {
+            abort_unless($inbox->group_id === $user->group_id, 404);
+        }
     }
 }

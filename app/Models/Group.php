@@ -34,4 +34,9 @@ class Group extends Model
     {
         return $this->hasMany(Inbox::class);
     }
+
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
 }

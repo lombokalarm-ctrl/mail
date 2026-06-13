@@ -1,9 +1,13 @@
 <x-app-layout>
+    @php
+        $currentUser = auth()->user();
+    @endphp
+
     <x-slot name="header">
         <div>
             <p class="section-kicker">Email Manager</p>
-            <h2 class="section-title">Daftar Email Global</h2>
-            <p class="section-copy">Cari email berdasarkan subject, sender, atau penerima, lalu hapus bila diperlukan.</p>
+            <h2 class="section-title">{{ $currentUser->isSaasAdmin() ? 'Daftar Email Global' : 'Daftar Email Group Anda' }}</h2>
+            <p class="section-copy">{{ $currentUser->isSaasAdmin() ? 'Cari email berdasarkan subject, sender, atau penerima, lalu hapus bila diperlukan.' : 'Cari email pada inbox group Anda berdasarkan subject, sender, atau penerima.' }}</p>
         </div>
     </x-slot>
 
@@ -33,12 +37,12 @@
                     @if ($search)
                         <span class="status-badge-blue">Filter aktif: {{ $search }}</span>
                     @else
-                        <span class="status-badge-slate">Global mailbox</span>
+                        <span class="status-badge-slate">{{ $currentUser->isSaasAdmin() ? 'Global mailbox' : 'Mailbox group' }}</span>
                     @endif
                 </div>
 
                 <div class="gmail-toolbar-right">
-                    <span class="status-badge-slate">Admin view</span>
+                    <span class="status-badge-slate">{{ $currentUser->isSaasAdmin() ? 'Admin view' : 'Group view' }}</span>
                 </div>
             </div>
 

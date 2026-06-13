@@ -9,6 +9,13 @@
 
     <div class="profile-grid">
         <div class="profile-main">
+            @if (auth()->user()?->must_change_password)
+                <div class="glass-banner border-amber-200/80 bg-amber-50/90 text-sm text-amber-900 shadow-none dark:border-amber-900/70 dark:bg-amber-950/40 dark:text-amber-100">
+                    <p class="font-semibold">Ganti password wajib dilakukan.</p>
+                    <p class="mt-2">Password awal dari admin SaaS harus segera diganti sebelum Anda melanjutkan penggunaan dashboard.</p>
+                </div>
+            @endif
+
             <div class="settings-section">
                 <div class="max-w-2xl">
                     @include('profile.partials.update-profile-information-form')

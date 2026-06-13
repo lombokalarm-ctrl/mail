@@ -14,6 +14,13 @@
         <p class="mt-2 leading-6">Gunakan kombinasi huruf besar, huruf kecil, angka, dan simbol agar akun admin lebih aman.</p>
     </div>
 
+    @if (auth()->user()?->must_change_password)
+        <div class="info-banner mt-4 border-amber-200/80 bg-amber-50/90 text-amber-900 dark:border-amber-900/70 dark:bg-amber-950/40 dark:text-amber-100">
+            <p class="info-banner-title">Tindakan Wajib</p>
+            <p class="mt-2 leading-6">Anda sedang memakai password awal. Simpan password baru untuk membuka akses penuh ke dashboard.</p>
+        </div>
+    @endif
+
     <form method="post" action="{{ route('password.update', [], false) }}" class="auth-form mt-6">
         @csrf
         @method('put')

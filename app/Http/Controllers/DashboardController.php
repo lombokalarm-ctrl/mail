@@ -6,14 +6,19 @@ use App\Models\Attachment;
 use App\Models\Email;
 use App\Models\Group;
 use App\Models\Inbox;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function __invoke(): View
+    public function __invoke(Request $request): View
     {
+        $user = $request->user();
+        $groupId = $user->isGroupAdmin() ? $user->group_id : null;
+
         $dailyStats = Email::query()
             ->selectRaw('DATE(received_at) as day, COUNT(*) as total')
+            ->when($groupId, fn ($query) => $query->whereHas('inbox', fn ($inboxQuery) => $inboxQuery->where('group_id', $groupId)))
             ->where('received_at', '>=', now()->subDays(13))
             ->groupBy('day')
             ->orderBy('day')
@@ -33,15 +38,33 @@ class DashboardController extends Controller
             });
 
         return view('dashboard', [
-            'totalInboxes' => Inbox::query()->count(),
-            'totalGroups' => Group::query()->count(),
-            'totalEmails' => Email::query()->count(),
-            'totalAttachments' => Attachment::query()->count(),
-            'emailsToday' => Email::query()->whereDate('received_at', now()->toDateString())->count(),
+            'isSaasAdmin' => $user->isSaasAdmin(),
+            'groupContext' => $groupId ? Group::query()->find($groupId) : null,
+            'totalInboxes' => Inbox::query()
+                ->when($groupId, fn ($query) => $query->where('group_id', $groupId))
+                ->count(),
+            'totalGroups' => $groupId ? 1 : Group::query()->count(),
+            'totalEmails' => Email::query()
+                ->when($groupId, fn ($query) => $query->whereHas('inbox', fn ($inboxQuery) => $inboxQuery->where('group_id', $groupId)))
+                ->count(),
+            'totalAttachments' => Attachment::query()
+                ->when($groupId, fn ($query) => $query->whereHas('email.inbox', fn ($inboxQuery) => $inboxQuery->where('group_id', $groupId)))
+                ->count(),
+            'emailsToday' => Email::query()
+                ->when($groupId, fn ($query) => $query->whereHas('inbox', fn ($inboxQuery) => $inboxQuery->where('group_id', $groupId)))
+                ->whereDate('received_at', now()->toDateString())
+                ->count(),
             'chartData' => $chartData,
-            'recentInboxes' => Inbox::query()->with(['group'])->withCount('emails')->latest()->limit(6)->get(),
+            'recentInboxes' => Inbox::query()
+                ->with(['group'])
+                ->withCount('emails')
+                ->when($groupId, fn ($query) => $query->where('group_id', $groupId))
+                ->latest()
+                ->limit(6)
+                ->get(),
             'recentEmails' => Email::query()
                 ->with(['inbox.group', 'attachments'])
+                ->when($groupId, fn ($query) => $query->whereHas('inbox', fn ($inboxQuery) => $inboxQuery->where('group_id', $groupId)))
                 ->latest('received_at')
                 ->limit(10)
                 ->get(),

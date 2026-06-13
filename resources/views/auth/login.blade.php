@@ -5,13 +5,13 @@
         <p class="section-kicker">Admin Login</p>
         <h2 class="mt-3 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">Masuk ke dashboard APLI Mail</h2>
         <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-            Gunakan akun admin Laravel untuk memantau inbox, email, lampiran, dan statistik catch-all.
+            Gunakan akun admin SaaS atau admin group pelanggan untuk mengakses dashboard sesuai hak akses masing-masing.
         </p>
     </div>
 
     <div class="info-banner mb-6">
         <p class="info-banner-title">Akses Aman</p>
-        <p class="mt-2 leading-6">Masuk menggunakan akun admin resmi. Semua perubahan pada inbox dan email dilakukan dari panel ini.</p>
+        <p class="mt-2 leading-6">Masuk menggunakan email dan password akun resmi. Admin group hanya dapat mengakses data milik group pelanggan mereka.</p>
     </div>
 
     <form method="POST" action="{{ route('login', absolute: false) }}" class="auth-form">

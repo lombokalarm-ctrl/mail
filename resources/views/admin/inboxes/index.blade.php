@@ -1,20 +1,70 @@
 <x-app-layout>
+    @php
+        $currentUser = auth()->user();
+    @endphp
+
     <x-slot name="header">
         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
                 <p class="section-kicker">Inbox Manager</p>
-                <h2 class="section-title">Daftar Inbox Catch-All</h2>
-                <p class="section-copy">Kelola inbox yang terdaftar ke group SaaS dan buka viewer bertoken per group.</p>
+                <h2 class="section-title">{{ $currentUser->isSaasAdmin() ? 'Daftar Inbox Catch-All' : 'Inbox Group Anda' }}</h2>
+                <p class="section-copy">{{ $currentUser->isSaasAdmin() ? 'Kelola inbox yang terdaftar ke group SaaS dan buka viewer bertoken per group.' : 'Kelola inbox yang terdaftar ke group Anda dan buka viewer bertoken pelanggan.' }}</p>
             </div>
 
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.groups.index', [], false) }}" class="btn-secondary px-4 py-2.5">Kelola Group</a>
+                @if ($currentUser->isSaasAdmin())
+                    <a href="{{ route('admin.groups.index', [], false) }}" class="btn-secondary px-4 py-2.5">Kelola Group</a>
+                @endif
                 <a href="{{ route('admin.emails.index', [], false) }}" class="btn-primary px-4 py-2.5">Lihat Email</a>
             </div>
         </div>
     </x-slot>
 
-    <section class="panel-card overflow-hidden">
+    <div class="space-y-6">
+        <section class="panel-card">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-950 dark:text-white">Tambah Inbox</h3>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $currentUser->isSaasAdmin() ? 'Tambahkan inbox baru dan hubungkan ke group pelanggan yang tepat.' : 'Tambahkan inbox baru untuk group Anda agar email catch-all bisa diterima.' }}</p>
+                </div>
+                <span class="status-badge-blue">Quick Create</span>
+            </div>
+
+            <form method="POST" action="{{ route('admin.inboxes.store', [], false) }}" class="mt-6 grid gap-4">
+                @csrf
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    @if ($currentUser->isSaasAdmin())
+                        <div>
+                            <label for="quick_group_id" class="detail-pair-label">Group</label>
+                            <select id="quick_group_id" name="group_id" class="field-input mt-2" required>
+                                <option value="">Pilih group...</option>
+                                @foreach ($groupOptions as $group)
+                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @else
+                        <input type="hidden" name="group_id" value="{{ $currentUser->group_id }}" />
+                        <div>
+                            <label class="detail-pair-label">Group</label>
+                            <p class="field-input mt-2 !py-3">{{ $currentUser->group?->name }}</p>
+                        </div>
+                    @endif
+
+                    <div>
+                        <label for="quick_inbox_name" class="detail-pair-label">Inbox Name</label>
+                        <input id="quick_inbox_name" type="text" name="inbox_name" class="field-input mt-2" placeholder="Contoh: support-acme" required />
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="btn-primary px-4 py-3">Tambah Inbox</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel-card overflow-hidden">
         <div class="admin-toolbar">
             <form method="GET" class="flex flex-1 flex-col gap-4 md:flex-row">
                 <div class="flex-1">
@@ -40,12 +90,12 @@
                     @if ($search)
                         <span class="status-badge-blue">Filter aktif: {{ $search }}</span>
                     @else
-                        <span class="status-badge-slate">Catch-all mailbox</span>
+                        <span class="status-badge-slate">{{ $currentUser->isSaasAdmin() ? 'Catch-all mailbox' : 'Mailbox group' }}</span>
                     @endif
                 </div>
 
                 <div class="gmail-toolbar-right">
-                    <span class="status-badge-slate">Inbox admin</span>
+                    <span class="status-badge-slate">{{ $currentUser->isSaasAdmin() ? 'Inbox admin' : 'Inbox pelanggan' }}</span>
                 </div>
             </div>
 
@@ -161,5 +211,6 @@
         <div class="mt-6">
             {{ $inboxes->links() }}
         </div>
-    </section>
+        </section>
+    </div>
 </x-app-layout>

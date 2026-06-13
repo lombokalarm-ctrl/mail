@@ -2,13 +2,18 @@
     <x-slot name="header">
         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-                <p class="section-kicker">Admin Console</p>
-                <h2 class="section-title">Dashboard APLI Mail</h2>
-                <p class="section-copy">Ringkasan inbox, email masuk, lampiran, dan aktivitas 14 hari terakhir.</p>
+                <p class="section-kicker">{{ $isSaasAdmin ? 'Admin Console' : 'Group Console' }}</p>
+                <h2 class="section-title">{{ $isSaasAdmin ? 'Dashboard APLI Mail' : 'Dashboard Group '.($groupContext?->name ?? '') }}</h2>
+                <p class="section-copy">
+                    {{ $isSaasAdmin ? 'Ringkasan inbox, email masuk, lampiran, dan aktivitas 14 hari terakhir.' : 'Ringkasan inbox, email, lampiran, dan aktivitas group Anda selama 14 hari terakhir.' }}
+                </p>
             </div>
 
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.groups.index', [], false) }}" class="btn-secondary px-4 py-2.5">Kelola Group</a>
+                @if ($isSaasAdmin)
+                    <a href="{{ route('admin.groups.index', [], false) }}" class="btn-secondary px-4 py-2.5">Kelola Group</a>
+                    <a href="{{ route('admin.users.index', [], false) }}" class="btn-secondary px-4 py-2.5">Kelola User</a>
+                @endif
                 <a href="{{ route('admin.inboxes.index', [], false) }}" class="btn-secondary px-4 py-2.5">Kelola Inbox</a>
                 <a href="{{ route('admin.emails.index', [], false) }}" class="btn-primary px-4 py-2.5">Kelola Email</a>
             </div>
@@ -21,25 +26,27 @@
 
     <div class="space-y-6">
         <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-            <div class="metric-card">
-                <p class="metric-label">Total Group</p>
-                <p class="metric-value">{{ number_format($totalGroups) }}</p>
-                <p class="metric-hint">Customer SaaS aktif</p>
-            </div>
+            @if ($isSaasAdmin)
+                <div class="metric-card">
+                    <p class="metric-label">Total Group</p>
+                    <p class="metric-value">{{ number_format($totalGroups) }}</p>
+                    <p class="metric-hint">Customer SaaS aktif</p>
+                </div>
+            @endif
             <div class="metric-card">
                 <p class="metric-label">Total Inbox</p>
                 <p class="metric-value">{{ number_format($totalInboxes) }}</p>
-                <p class="metric-hint">Inbox terdaftar ke group</p>
+                <p class="metric-hint">{{ $isSaasAdmin ? 'Inbox terdaftar ke group' : 'Inbox aktif di group Anda' }}</p>
             </div>
             <div class="metric-card">
                 <p class="metric-label">Total Email</p>
                 <p class="metric-value">{{ number_format($totalEmails) }}</p>
-                <p class="metric-hint">Pesan tersimpan di database</p>
+                <p class="metric-hint">{{ $isSaasAdmin ? 'Pesan tersimpan di database' : 'Pesan tersimpan untuk group Anda' }}</p>
             </div>
             <div class="metric-card">
                 <p class="metric-label">Total Lampiran</p>
                 <p class="metric-value">{{ number_format($totalAttachments) }}</p>
-                <p class="metric-hint">File tersimpan di storage</p>
+                <p class="metric-hint">{{ $isSaasAdmin ? 'File tersimpan di storage' : 'Lampiran pada email group Anda' }}</p>
             </div>
             <div class="metric-card">
                 <p class="metric-label">Email Hari Ini</p>
@@ -49,34 +56,45 @@
         </div>
 
         <div class="quick-actions">
-            <a href="{{ route('admin.groups.index', [], false) }}" class="quick-action-card">
-                <div>
-                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Group Manager</p>
-                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Atur token viewer per customer dan kelola inbox SaaS tanpa API manual.</p>
-                </div>
-                <span class="status-badge-blue">{{ number_format($totalGroups) }}</span>
-            </a>
+            @if ($isSaasAdmin)
+                <a href="{{ route('admin.groups.index', [], false) }}" class="quick-action-card">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Group Manager</p>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Atur token viewer per customer dan kelola inbox SaaS tanpa API manual.</p>
+                    </div>
+                    <span class="status-badge-blue">{{ number_format($totalGroups) }}</span>
+                </a>
+                <a href="{{ route('admin.users.index', [], false) }}" class="quick-action-card">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white">User Manager</p>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Buat akun admin group pelanggan dan reset password awal bila dibutuhkan.</p>
+                    </div>
+                    <span class="status-badge-blue">Akses</span>
+                </a>
+            @endif
             <a href="{{ route('admin.inboxes.index', [], false) }}" class="quick-action-card">
                 <div>
                     <p class="text-sm font-semibold text-slate-900 dark:text-white">Inbox Manager</p>
-                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Lihat inbox catch-all dan salin viewer URL lebih cepat.</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $isSaasAdmin ? 'Lihat inbox catch-all dan salin viewer URL lebih cepat.' : 'Kelola inbox yang terdaftar untuk group Anda.' }}</p>
                 </div>
                 <span class="status-badge-blue">{{ number_format($totalInboxes) }}</span>
             </a>
             <a href="{{ route('admin.emails.index', [], false) }}" class="quick-action-card">
                 <div>
                     <p class="text-sm font-semibold text-slate-900 dark:text-white">Email Manager</p>
-                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Tinjau email global, lampiran, dan aksi hapus dari satu halaman.</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $isSaasAdmin ? 'Tinjau email global, lampiran, dan aksi hapus dari satu halaman.' : 'Tinjau email yang masuk ke inbox group Anda.' }}</p>
                 </div>
                 <span class="status-badge-slate">{{ number_format($totalEmails) }}</span>
             </a>
-            <a href="{{ route('viewer.index', ['viewerKey' => 'ahmad-alhijrah-f7k29a'], false) }}" class="quick-action-card">
-                <div>
-                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Sample Viewer</p>
-                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Buka inbox demo publik untuk cek tampilan pengguna akhir.</p>
-                </div>
-                <span class="status-badge-emerald">Live</span>
-            </a>
+            @if ($isSaasAdmin)
+                <a href="{{ route('viewer.index', ['viewerKey' => 'ahmad-alhijrah-f7k29a'], false) }}" class="quick-action-card">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Sample Viewer</p>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Buka inbox demo publik untuk cek tampilan pengguna akhir.</p>
+                    </div>
+                    <span class="status-badge-emerald">Live</span>
+                </a>
+            @endif
         </div>
 
         <div class="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
@@ -113,7 +131,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-slate-950 dark:text-white">Inbox Terbaru</h3>
-                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Inbox terbaru yang sudah dipetakan ke group pelanggan.</p>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $isSaasAdmin ? 'Inbox terbaru yang sudah dipetakan ke group pelanggan.' : 'Inbox terbaru yang terdaftar pada group Anda.' }}</p>
                     </div>
                     <a href="{{ route('admin.inboxes.index', [], false) }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">Lihat semua</a>
                 </div>

@@ -26,7 +26,11 @@ class DatabaseSeeder extends Seeder
         ], [
             'name' => 'APLI Admin',
             'email_verified_at' => now(),
+            'role' => User::ROLE_SAAS_ADMIN,
+            'group_id' => null,
             'password' => Hash::make(config('apli_mail.default_admin_password')),
+            'must_change_password' => false,
+            'is_active' => true,
         ]);
 
         Storage::disk(config('apli_mail.attachments_disk'))->deleteDirectory('attachments');

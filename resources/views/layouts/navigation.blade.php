@@ -12,7 +12,10 @@
 
         <div class="hidden items-center gap-2 rounded-full border border-white/70 bg-slate-100/65 px-2 py-2 dark:border-slate-800 dark:bg-slate-900/65 md:flex">
             <a href="{{ route('dashboard', [], false) }}" class="nav-pill {{ request()->routeIs('dashboard') ? 'nav-pill-active' : '' }}">Dashboard</a>
-            <a href="{{ route('admin.groups.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.groups.*') ? 'nav-pill-active' : '' }}">Group</a>
+            @if (Auth::user()->isSaasAdmin())
+                <a href="{{ route('admin.groups.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.groups.*') ? 'nav-pill-active' : '' }}">Group</a>
+                <a href="{{ route('admin.users.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.users.*') ? 'nav-pill-active' : '' }}">User</a>
+            @endif
             <a href="{{ route('admin.inboxes.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.inboxes.*') ? 'nav-pill-active' : '' }}">Inbox</a>
             <a href="{{ route('admin.emails.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.emails.*') ? 'nav-pill-active' : '' }}">Email</a>
             <a href="{{ route('profile.edit', [], false) }}" class="nav-pill {{ request()->routeIs('profile.*') ? 'nav-pill-active' : '' }}">Profil</a>
@@ -26,6 +29,7 @@
             <div class="rounded-[1.4rem] border border-white/70 bg-white/80 px-4 py-2.5 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
                 <p class="text-sm font-medium text-slate-900 dark:text-white">{{ Auth::user()->name }}</p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">{{ Auth::user()->email }}</p>
+                <p class="mt-1 text-[11px] uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">{{ Auth::user()->isSaasAdmin() ? 'SaaS Admin' : 'Group Admin' }}</p>
             </div>
 
             <form method="POST" action="{{ route('logout', [], false) }}">
@@ -51,7 +55,10 @@
                 <p class="text-xs text-slate-500 dark:text-slate-400">{{ Auth::user()->email }}</p>
             </div>
             <a href="{{ route('dashboard', [], false) }}" class="mobile-nav-pill">Dashboard</a>
-            <a href="{{ route('admin.groups.index', [], false) }}" class="mobile-nav-pill">Group</a>
+            @if (Auth::user()->isSaasAdmin())
+                <a href="{{ route('admin.groups.index', [], false) }}" class="mobile-nav-pill">Group</a>
+                <a href="{{ route('admin.users.index', [], false) }}" class="mobile-nav-pill">User</a>
+            @endif
             <a href="{{ route('admin.inboxes.index', [], false) }}" class="mobile-nav-pill">Inbox</a>
             <a href="{{ route('admin.emails.index', [], false) }}" class="mobile-nav-pill">Email</a>
             <a href="{{ route('profile.edit', [], false) }}" class="mobile-nav-pill">Profil</a>

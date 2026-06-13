@@ -12,7 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'active_user' => \App\Http\Middleware\EnsureActiveUser::class,
+            'password_changed' => \App\Http\Middleware\EnsurePasswordHasBeenChanged::class,
+            'saas_admin' => \App\Http\Middleware\EnsureSaasAdmin::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
