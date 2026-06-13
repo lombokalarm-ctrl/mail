@@ -30,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/dashboard/groups', [AdminGroupController::class, 'index'])->name('admin.groups.index');
     Route::post('/dashboard/groups', [AdminGroupController::class, 'store'])->name('admin.groups.store');
+    Route::post('/dashboard/groups/import-inboxes', [AdminGroupController::class, 'importInboxes'])->name('admin.groups.import-inboxes');
     Route::patch('/dashboard/groups/{group}', [AdminGroupController::class, 'update'])->name('admin.groups.update');
     Route::delete('/dashboard/groups/{group}', [AdminGroupController::class, 'destroy'])->name('admin.groups.destroy');
     Route::get('/dashboard/inboxes', [AdminInboxController::class, 'index'])->name('admin.inboxes.index');

@@ -26,6 +26,30 @@
             </div>
         @endif
 
+        @if (session('import_report'))
+            <div class="glass-banner border-sky-200/80 bg-sky-50/85 text-sm text-sky-900 shadow-none dark:border-sky-900/70 dark:bg-sky-950/40 dark:text-sky-100">
+                <p class="font-semibold">Ringkasan import inbox.</p>
+                <p class="mt-2">
+                    {{ session('import_report.created') }} inbox berhasil ditambahkan.
+                    @if (count(session('import_report.skipped', [])) > 0)
+                        {{ count(session('import_report.skipped', [])) }} baris dilewati.
+                    @endif
+                </p>
+
+                @if (count(session('import_report.skipped', [])) > 0)
+                    <ul class="mt-2 list-disc space-y-1 pl-5">
+                        @foreach (array_slice(session('import_report.skipped', []), 0, 8) as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+
+                    @if (count(session('import_report.skipped', [])) > 8)
+                        <p class="mt-2 text-xs text-sky-700 dark:text-sky-200">Masih ada {{ count(session('import_report.skipped', [])) - 8 }} catatan lain yang tidak ditampilkan.</p>
+                    @endif
+                @endif
+            </div>
+        @endif
+
         <div class="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
             <section class="panel-card">
                 <div class="flex items-center justify-between gap-3">
@@ -100,6 +124,51 @@
                 </form>
             </section>
         </div>
+
+        <section class="panel-card">
+            <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-950 dark:text-white">Import Inbox Massal</h3>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Upload file CSV atau XLSX untuk menambahkan banyak inbox sekaligus ke satu group.</p>
+                </div>
+                <span class="status-badge-slate">CSV / XLSX</span>
+            </div>
+
+            <form method="POST" action="{{ route('admin.groups.import-inboxes', [], false) }}" enctype="multipart/form-data" class="mt-6 grid gap-4">
+                @csrf
+
+                <div class="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+                    <div>
+                        <label for="import_group_id" class="detail-pair-label">Pilih Group Tujuan</label>
+                        <select id="import_group_id" name="group_id" class="field-input mt-2" required>
+                            <option value="">Pilih group...</option>
+                            @foreach ($groupOptions as $groupOption)
+                                <option value="{{ $groupOption->id }}" @selected((string) old('group_id') === (string) $groupOption->id)>{{ $groupOption->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="import_file" class="detail-pair-label">File Import</label>
+                        <input id="import_file" type="file" name="import_file" accept=".csv,.txt,.xlsx" class="field-input mt-2 !py-2.5" required />
+                        <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Maksimal 10 MB. Bisa berisi satu kolom `inbox_name`, `email`, atau cukup kolom pertama.</p>
+                    </div>
+                </div>
+
+                <div class="rounded-[1.5rem] border border-slate-200/80 bg-slate-50/70 p-4 text-sm text-slate-600 dark:border-slate-800/80 dark:bg-slate-900/60 dark:text-slate-300">
+                    <p class="font-semibold text-slate-900 dark:text-white">Format yang didukung</p>
+                    <ul class="mt-2 list-disc space-y-1 pl-5">
+                        <li>Satu inbox per baris, misalnya `support-acme` atau `support-acme@{{ config('apli_mail.domain') }}`.</li>
+                        <li>Jika baris pertama adalah header seperti `inbox_name` atau `email`, sistem akan membacanya otomatis.</li>
+                        <li>Inbox yang sudah ada atau duplikat di file akan dilewati, bukan menimpa data lama.</li>
+                    </ul>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="btn-primary px-4 py-3">Import Inbox</button>
+                </div>
+            </form>
+        </section>
 
         <section class="panel-card overflow-hidden">
             <div class="admin-toolbar">

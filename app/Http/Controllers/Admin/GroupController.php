@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Services\EmailMaintenanceService;
+use App\Services\InboxImportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use RuntimeException;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -86,5 +88,44 @@ class GroupController extends Controller
         $maintenance->deleteGroup($group);
 
         return back()->with('status', 'Group berhasil dihapus.');
+    }
+
+    public function importInboxes(Request $request, InboxImportService $importService): RedirectResponse
+    {
+        $data = $request->validate([
+            'group_id' => ['required', 'exists:groups,id'],
+            'import_file' => [
+                'required',
+                'file',
+                'max:10240',
+                function (string $attribute, $value, $fail): void {
+                    $extension = strtolower($value->getClientOriginalExtension());
+
+                    if (! in_array($extension, ['csv', 'txt', 'xlsx'], true)) {
+                        $fail('Format file tidak didukung. Gunakan CSV atau XLSX.');
+                    }
+                },
+            ],
+        ]);
+
+        $group = Group::query()->findOrFail($data['group_id']);
+
+        try {
+            $report = $importService->import($group, $request->file('import_file'));
+        } catch (RuntimeException $exception) {
+            return back()->withErrors([
+                'import_file' => $exception->getMessage(),
+            ])->withInput();
+        }
+
+        $status = "{$report['created']} inbox berhasil diimport ke group {$group->name}.";
+
+        if (count($report['skipped']) > 0) {
+            $status .= ' '.count($report['skipped']).' baris dilewati.';
+        }
+
+        return back()
+            ->with('status', $status)
+            ->with('import_report', $report);
     }
 }
