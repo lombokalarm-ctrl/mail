@@ -176,6 +176,7 @@ Catatan:
 - Pastikan MX record domain sudah mengarah ke VPS.
 - Jalankan Postfix di host VPS lalu pipe ke container `app`.
 - Sesuaikan `APLI_MAIL_PROJECT_DIR` jika project dipasang di path selain `/var/www/email`.
+- Script `scripts/postfix-ingest.sh` memakai `docker exec` ke container `apli-mail-app` agar tetap bekerja saat Postfix berjalan dengan user non-root.
 
 ## Reverse Proxy Dan SSL
 
