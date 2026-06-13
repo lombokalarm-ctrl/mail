@@ -9,11 +9,16 @@
         </p>
     </header>
 
+    <div class="info-banner mt-6">
+        <p class="info-banner-title">Catatan</p>
+        <p class="mt-2 leading-6">Email ini juga dipakai untuk alur reset password, verifikasi, dan audit akses admin ke dashboard.</p>
+    </div>
+
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="auth-form mt-6">
         @csrf
         @method('patch')
 
@@ -47,18 +52,22 @@
             @endif
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Simpan') }}</x-primary-button>
+        <div class="auth-actions">
+            <p class="helper-text">Perubahan profil berlaku segera setelah disimpan.</p>
 
-            @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-slate-500 dark:text-slate-400"
-                >{{ __('Tersimpan.') }}</p>
-            @endif
+            <div class="flex items-center gap-4">
+                <x-primary-button>{{ __('Simpan') }}</x-primary-button>
+
+                @if (session('status') === 'profile-updated')
+                    <p
+                        x-data="{ show: true }"
+                        x-show="show"
+                        x-transition
+                        x-init="setTimeout(() => show = false, 2000)"
+                        class="text-sm text-slate-500 dark:text-slate-400"
+                    >{{ __('Tersimpan.') }}</p>
+                @endif
+            </div>
         </div>
     </form>
 </section>

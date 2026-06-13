@@ -9,7 +9,12 @@
         </p>
     </div>
 
-    <form method="POST" action="{{ route('login', absolute: false) }}">
+    <div class="info-banner mb-6">
+        <p class="info-banner-title">Akses Aman</p>
+        <p class="mt-2 leading-6">Masuk menggunakan akun admin resmi. Semua perubahan pada inbox dan email dilakukan dari panel ini.</p>
+    </div>
+
+    <form method="POST" action="{{ route('login', absolute: false) }}" class="auth-form">
         @csrf
 
         <div>
@@ -30,13 +35,13 @@
         </div>
 
         <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
+            <label for="remember_me" class="inline-flex items-center gap-3 rounded-2xl bg-slate-50/85 px-4 py-3 dark:bg-slate-950/55">
                 <input id="remember_me" type="checkbox" class="rounded border-slate-300 text-blue-600 shadow-sm focus:ring-blue-500" name="remember">
-                <span class="ms-2 text-sm text-slate-600 dark:text-slate-300">{{ __('Ingat saya') }}</span>
+                <span class="text-sm text-slate-600 dark:text-slate-300">{{ __('Ingat saya di perangkat ini') }}</span>
             </label>
         </div>
 
-        <div class="mt-6 flex items-center justify-between gap-4">
+        <div class="auth-actions">
             @if (Route::has('password.request'))
                 <a class="text-sm text-slate-500 transition hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400" href="{{ route('password.request', absolute: false) }}">
                     {{ __('Lupa password?') }}

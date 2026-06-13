@@ -8,7 +8,12 @@
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('password.email') }}">
+    <div class="info-banner mb-6">
+        <p class="info-banner-title">Petunjuk</p>
+        <p class="mt-2 leading-6">Gunakan email admin yang terdaftar. Link reset akan dikirim jika akun ditemukan di sistem.</p>
+    </div>
+
+    <form method="POST" action="{{ route('password.email') }}" class="auth-form">
         @csrf
 
         <div>
@@ -17,7 +22,11 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="mt-6 flex items-center justify-end">
+        <div class="auth-actions">
+            <a href="{{ route('login', absolute: false) }}" class="btn-ghost">
+                {{ __('Kembali ke Login') }}
+            </a>
+
             <x-primary-button>
                 {{ __('Kirim Link Reset') }}
             </x-primary-button>

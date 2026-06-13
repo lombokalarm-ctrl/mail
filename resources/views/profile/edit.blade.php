@@ -7,25 +7,46 @@
         </div>
     </x-slot>
 
-    <div class="space-y-6">
-        <div class="mx-auto max-w-7xl space-y-6 sm:px-0 lg:px-0">
+    <div class="profile-grid">
+        <div class="profile-main">
             <div class="settings-section">
-                <div class="max-w-xl">
+                <div class="max-w-2xl">
                     @include('profile.partials.update-profile-information-form')
                 </div>
             </div>
 
             <div class="settings-section">
-                <div class="max-w-xl">
+                <div class="max-w-2xl">
                     @include('profile.partials.update-password-form')
+                </div>
+            </div>
+        </div>
+
+        <aside class="profile-sidebar">
+            <div class="panel-card">
+                <p class="section-kicker">Ringkasan Akses</p>
+                <h3 class="mt-3 text-xl font-semibold text-slate-950 dark:text-white">Kelola identitas admin dengan aman</h3>
+                <div class="mt-5 helper-list">
+                    <div class="helper-item">
+                        <span class="helper-item-dot"></span>
+                        <p>Pastikan email login aktif agar notifikasi reset password dan verifikasi tetap dapat diterima.</p>
+                    </div>
+                    <div class="helper-item">
+                        <span class="helper-item-dot"></span>
+                        <p>Gunakan password unik dan panjang, lalu perbarui secara berkala untuk mengurangi risiko akses tidak sah.</p>
+                    </div>
+                    <div class="helper-item">
+                        <span class="helper-item-dot"></span>
+                        <p>Hapus akun hanya jika Anda yakin tidak lagi membutuhkan akses admin ke dashboard APLI Mail.</p>
+                    </div>
                 </div>
             </div>
 
             <div class="settings-section">
-                <div class="max-w-xl">
+                <div class="max-w-2xl">
                     @include('profile.partials.delete-user-form')
                 </div>
             </div>
-        </div>
+        </aside>
     </div>
 </x-app-layout>

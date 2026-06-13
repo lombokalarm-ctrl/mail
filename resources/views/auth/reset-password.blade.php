@@ -6,7 +6,12 @@
         </p>
     </div>
 
-    <form method="POST" action="{{ route('password.store') }}">
+    <div class="info-banner mb-6">
+        <p class="info-banner-title">Tips Keamanan</p>
+        <p class="mt-2 leading-6">Gunakan password baru yang belum pernah dipakai pada layanan lain untuk menjaga keamanan panel admin.</p>
+    </div>
+
+    <form method="POST" action="{{ route('password.store') }}" class="auth-form">
         @csrf
 
         <input type="hidden" name="token" value="{{ $request->route('token') }}">
@@ -33,7 +38,11 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="mt-6 flex items-center justify-end">
+        <div class="auth-actions">
+            <a href="{{ route('login', absolute: false) }}" class="btn-ghost">
+                {{ __('Kembali ke Login') }}
+            </a>
+
             <x-primary-button>
                 {{ __('Simpan Password Baru') }}
             </x-primary-button>

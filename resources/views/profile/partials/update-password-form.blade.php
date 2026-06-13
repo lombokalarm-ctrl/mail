@@ -9,7 +9,12 @@
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <div class="info-banner mt-6">
+        <p class="info-banner-title">Rekomendasi</p>
+        <p class="mt-2 leading-6">Gunakan kombinasi huruf besar, huruf kecil, angka, dan simbol agar akun admin lebih aman.</p>
+    </div>
+
+    <form method="post" action="{{ route('password.update') }}" class="auth-form mt-6">
         @csrf
         @method('put')
 
@@ -31,18 +36,22 @@
             <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Simpan') }}</x-primary-button>
+        <div class="auth-actions">
+            <p class="helper-text">Password baru akan dipakai pada sesi login berikutnya.</p>
 
-            @if (session('status') === 'password-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-slate-500 dark:text-slate-400"
-                >{{ __('Tersimpan.') }}</p>
-            @endif
+            <div class="flex items-center gap-4">
+                <x-primary-button>{{ __('Simpan') }}</x-primary-button>
+
+                @if (session('status') === 'password-updated')
+                    <p
+                        x-data="{ show: true }"
+                        x-show="show"
+                        x-transition
+                        x-init="setTimeout(() => show = false, 2000)"
+                        class="text-sm text-slate-500 dark:text-slate-400"
+                    >{{ __('Tersimpan.') }}</p>
+                @endif
+            </div>
         </div>
     </form>
 </section>

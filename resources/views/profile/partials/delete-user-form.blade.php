@@ -9,13 +9,18 @@
         </p>
     </header>
 
+    <div class="info-banner">
+        <p class="info-banner-title">Peringatan</p>
+        <p class="mt-2 leading-6">Penghapusan akun bersifat permanen dan tidak dapat dibatalkan. Pastikan ada admin pengganti bila sistem masih aktif digunakan.</p>
+    </div>
+
     <x-danger-button
         x-data=""
         x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Delete Account') }}</x-danger-button>
+    >{{ __('Hapus Akun Admin') }}</x-danger-button>
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
+        <form method="post" action="{{ route('profile.destroy') }}" class="p-6 sm:p-8">
             @csrf
             @method('delete')
 
@@ -41,12 +46,12 @@
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
             </div>
 
-            <div class="mt-6 flex justify-end">
+            <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                 <x-secondary-button x-on:click="$dispatch('close')">
                     {{ __('Batal') }}
                 </x-secondary-button>
 
-                <x-danger-button class="ms-3">
+                <x-danger-button class="sm:ms-3">
                     {{ __('Hapus Akun') }}
                 </x-danger-button>
             </div>

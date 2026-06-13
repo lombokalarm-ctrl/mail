@@ -127,6 +127,50 @@
         @apply text-sm leading-6 text-slate-500 dark:text-slate-400;
     }
 
+    .helper-list {
+        @apply space-y-3 text-sm text-slate-600 dark:text-slate-300;
+    }
+
+    .helper-item {
+        @apply flex items-start gap-3 rounded-2xl bg-slate-50/85 px-4 py-3 dark:bg-slate-950/55;
+    }
+
+    .helper-item-dot {
+        @apply mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-blue-500;
+    }
+
+    .info-banner {
+        @apply rounded-[1.6rem] border border-slate-200/80 bg-slate-50/85 p-4 text-sm text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-950/55 dark:text-slate-300;
+    }
+
+    .info-banner-title {
+        @apply text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400;
+    }
+
+    .auth-form {
+        @apply space-y-6;
+    }
+
+    .auth-actions {
+        @apply flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .auth-divider {
+        @apply my-6 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-800;
+    }
+
+    .profile-grid {
+        @apply grid gap-6 xl:grid-cols-[1.2fr_0.8fr];
+    }
+
+    .profile-sidebar {
+        @apply space-y-6;
+    }
+
+    .profile-main {
+        @apply space-y-6;
+    }
+
     .toolbar-group {
         @apply flex flex-wrap gap-3;
     }

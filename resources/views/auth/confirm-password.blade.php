@@ -6,7 +6,12 @@
         </p>
     </div>
 
-    <form method="POST" action="{{ route('password.confirm') }}">
+    <div class="info-banner mb-6">
+        <p class="info-banner-title">Verifikasi Tambahan</p>
+        <p class="mt-2 leading-6">Langkah ini melindungi perubahan sensitif pada akun dan pengaturan admin.</p>
+    </div>
+
+    <form method="POST" action="{{ route('password.confirm') }}" class="auth-form">
         @csrf
 
         <div>
@@ -20,7 +25,11 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <div class="mt-6 flex justify-end">
+        <div class="auth-actions">
+            <a href="{{ route('dashboard', absolute: false) }}" class="btn-ghost">
+                {{ __('Kembali') }}
+            </a>
+
             <x-primary-button>
                 {{ __('Konfirmasi') }}
             </x-primary-button>
