@@ -45,6 +45,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY --from=vendor /app/vendor ./vendor
 COPY . .
 COPY --from=frontend /app/public/build ./public/build
+COPY --from=frontend /app/public/build /opt/apli-public-build
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint
 
@@ -52,6 +53,7 @@ RUN php artisan package:discover --ansi
 
 RUN chmod +x /usr/local/bin/entrypoint \
     && mkdir -p /var/log/supervisor \
+    && mkdir -p /opt/apli-public-build /var/www/html/public/build \
     && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 9000

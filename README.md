@@ -114,6 +114,20 @@ Catatan deployment:
 - Service `postgres` dan `redis` tidak diekspos ke host agar lebih aman.
 - `Dockerfile` sudah mengaktifkan ekstensi `redis` PHP untuk queue dan cache.
 - Migration `attachments` harus berjalan setelah `emails`; file timestamp di repo sudah diurutkan untuk itu.
+- Asset Vite production disinkronkan otomatis dari image `app` ke volume `apli_public_build` saat container start, lalu dibaca bersama oleh `app` dan `nginx`. Ini mencegah mismatch hash CSS/JS antara PHP-FPM dan Nginx.
+
+### Deploy Asset Yang Aman
+
+Untuk deploy rutin di VPS, cukup gunakan alur berikut:
+
+```bash
+git pull origin main
+docker compose up -d --build
+docker compose exec app php artisan migrate --force
+docker compose exec app php artisan optimize:clear
+```
+
+Tidak perlu lagi menjalankan `npm run build` di host atau menyalin `public/build` manual ke container.
 
 ## Pipeline Catch-All
 

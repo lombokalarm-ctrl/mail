@@ -4,6 +4,9 @@ set -e
 cd /var/www/html
 
 mkdir -p storage/app storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
+mkdir -p public/build
+rm -rf public/build/*
+cp -a /opt/apli-public-build/. public/build/
 chown -R www-data:www-data storage bootstrap/cache
 
 if [ ! -f .env ]; then
