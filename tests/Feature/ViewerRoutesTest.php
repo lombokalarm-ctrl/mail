@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Attachment;
 use App\Models\Email;
+use App\Models\Group;
 use App\Models\Inbox;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
@@ -16,10 +17,14 @@ class ViewerRoutesTest extends TestCase
 
     public function test_viewer_pages_show_email_list_and_detail(): void
     {
+        $group = Group::factory()->create([
+            'viewer_token' => 'abc123',
+        ]);
+
         $inbox = Inbox::factory()->create([
+            'group_id' => $group->id,
             'inbox_name' => 'visa-alhijrah',
             'slug' => 'visa-alhijrah',
-            'access_token' => 'abc123',
         ]);
 
         $email = Email::factory()->create([
@@ -47,9 +52,13 @@ class ViewerRoutesTest extends TestCase
         Storage::fake('local');
         Config::set('apli_mail.attachments_disk', 'local');
 
+        $group = Group::factory()->create([
+            'viewer_token' => 'tok321',
+        ]);
+
         $inbox = Inbox::factory()->create([
+            'group_id' => $group->id,
             'slug' => 'tiket-alhijrah',
-            'access_token' => 'tok321',
         ]);
 
         $email = Email::factory()->create([

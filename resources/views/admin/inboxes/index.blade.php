@@ -4,7 +4,12 @@
             <div>
                 <p class="section-kicker">Inbox Manager</p>
                 <h2 class="section-title">Daftar Inbox Catch-All</h2>
-                <p class="section-copy">Cari inbox yang dibuat otomatis dari email masuk ke `email.apli.my.id`.</p>
+                <p class="section-copy">Kelola inbox yang terdaftar ke group SaaS dan buka viewer bertoken per group.</p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ route('admin.groups.index') }}" class="btn-secondary px-4 py-2.5">Kelola Group</a>
+                <a href="{{ route('admin.emails.index') }}" class="btn-primary px-4 py-2.5">Lihat Email</a>
             </div>
         </div>
     </x-slot>
@@ -67,7 +72,7 @@
                         <div class="gmail-row-content">
                             <div class="min-w-0">
                                 <div class="flex min-w-0 items-center gap-2">
-                                    <p class="gmail-row-subject">Viewer catch-all aktif</p>
+                                    <p class="gmail-row-subject">{{ $inbox->group?->name ?: 'Group belum diatur' }}</p>
                                     <span class="status-badge-blue shrink-0 text-[10px]">{{ $inbox->emails_count }} email</span>
                                 </div>
                                 <p class="gmail-row-preview">{{ $inbox->viewer_url }}</p>
@@ -114,6 +119,10 @@
                     </div>
 
                     <div class="mt-4 grid gap-3">
+                        <div class="detail-pair">
+                            <p class="detail-pair-label">Group</p>
+                            <p class="detail-pair-value">{{ $inbox->group?->name ?: '-' }}</p>
+                        </div>
                         <div class="detail-pair">
                             <p class="detail-pair-label">Viewer URL</p>
                             <p class="detail-pair-value break-all">{{ $inbox->viewer_url }}</p>

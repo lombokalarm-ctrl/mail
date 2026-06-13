@@ -21,8 +21,9 @@ class ViewerAccessService
         }
 
         return Inbox::query()
+            ->with('group')
             ->where('slug', $slug)
-            ->where('access_token', $token)
+            ->whereHas('group', fn ($query) => $query->where('viewer_token', $token))
             ->firstOrFail();
     }
 

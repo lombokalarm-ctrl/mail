@@ -12,7 +12,7 @@ class AttachmentController extends Controller
 {
     public function __invoke(Request $request, Attachment $attachment, ViewerAccessService $access): StreamedResponse
     {
-        $attachment->loadMissing('email.inbox');
+        $attachment->loadMissing('email.inbox.group');
 
         if (! $request->user() && ! $access->canDownloadAttachment($request->query('viewer'), $attachment)) {
             abort(403);

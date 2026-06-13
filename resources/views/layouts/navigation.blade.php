@@ -12,6 +12,7 @@
 
         <div class="hidden items-center gap-2 rounded-full border border-white/70 bg-slate-100/65 px-2 py-2 dark:border-slate-800 dark:bg-slate-900/65 md:flex">
             <a href="{{ route('dashboard') }}" class="nav-pill {{ request()->routeIs('dashboard') ? 'nav-pill-active' : '' }}">Dashboard</a>
+            <a href="{{ route('admin.groups.index') }}" class="nav-pill {{ request()->routeIs('admin.groups.*') ? 'nav-pill-active' : '' }}">Group</a>
             <a href="{{ route('admin.inboxes.index') }}" class="nav-pill {{ request()->routeIs('admin.inboxes.*') ? 'nav-pill-active' : '' }}">Inbox</a>
             <a href="{{ route('admin.emails.index') }}" class="nav-pill {{ request()->routeIs('admin.emails.*') ? 'nav-pill-active' : '' }}">Email</a>
             <a href="{{ route('profile.edit') }}" class="nav-pill {{ request()->routeIs('profile.*') ? 'nav-pill-active' : '' }}">Profil</a>
@@ -50,6 +51,7 @@
                 <p class="text-xs text-slate-500 dark:text-slate-400">{{ Auth::user()->email }}</p>
             </div>
             <a href="{{ route('dashboard') }}" class="mobile-nav-pill">Dashboard</a>
+            <a href="{{ route('admin.groups.index') }}" class="mobile-nav-pill">Group</a>
             <a href="{{ route('admin.inboxes.index') }}" class="mobile-nav-pill">Inbox</a>
             <a href="{{ route('admin.emails.index') }}" class="mobile-nav-pill">Email</a>
             <a href="{{ route('profile.edit') }}" class="mobile-nav-pill">Profil</a>

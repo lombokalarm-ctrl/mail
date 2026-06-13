@@ -15,7 +15,7 @@ class EmailController extends Controller
         $search = trim((string) $request->string('q'));
 
         $emails = Email::query()
-            ->with(['inbox', 'attachments'])
+            ->with(['inbox.group', 'attachments'])
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($nested) use ($search): void {
                     $nested
@@ -34,7 +34,7 @@ class EmailController extends Controller
 
     public function show(Email $email): JsonResponse
     {
-        $email->load(['inbox', 'attachments']);
+        $email->load(['inbox.group', 'attachments']);
 
         return response()->json([
             'data' => $this->transformEmail($email, true),
@@ -57,6 +57,11 @@ class EmailController extends Controller
             'inbox' => [
                 'id' => $email->inbox->id,
                 'inbox_name' => $email->inbox->inbox_name,
+                'group' => [
+                    'id' => $email->inbox->group?->id,
+                    'name' => $email->inbox->group?->name,
+                    'viewer_token' => $email->inbox->group?->viewer_token,
+                ],
                 'viewer_url' => $email->inbox->viewer_url,
             ],
             'sender_email' => $email->sender_email,

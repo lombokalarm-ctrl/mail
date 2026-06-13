@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Attachment;
 use App\Models\Email;
+use App\Models\Group;
 use App\Models\Inbox;
 use App\Services\InboundEmailService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,10 +16,20 @@ class InboundEmailServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_creates_inbox_email_and_attachment_from_raw_message(): void
+    public function test_it_stores_email_and_attachment_for_registered_inbox(): void
     {
         Storage::fake('local');
         Config::set('apli_mail.attachments_disk', 'local');
+
+        $group = Group::factory()->create([
+            'viewer_token' => 'alhijrah01',
+        ]);
+
+        Inbox::factory()->create([
+            'group_id' => $group->id,
+            'inbox_name' => 'ahmad-alhijrah',
+            'slug' => 'ahmad-alhijrah',
+        ]);
 
         $rawEmail = <<<MAIL
 Delivered-To: ahmad-alhijrah@email.apli.my.id
@@ -52,6 +63,7 @@ MAIL;
 
         $this->assertInstanceOf(Email::class, $email);
         $this->assertDatabaseCount('inboxes', 1);
+        $this->assertDatabaseCount('groups', 1);
         $this->assertDatabaseCount('emails', 1);
         $this->assertDatabaseCount('attachments', 1);
         $this->assertSame('ahmad-alhijrah', Inbox::query()->first()->inbox_name);
@@ -59,5 +71,23 @@ MAIL;
 
         $attachment = Attachment::query()->first();
         Storage::disk('local')->assertExists($attachment->filepath);
+    }
+
+    public function test_it_rejects_email_for_unregistered_inbox(): void
+    {
+        $rawEmail = <<<MAIL
+Delivered-To: belum-terdaftar@email.apli.my.id
+From: "Maskapai Nusantara" <travel@maskapai.example>
+To: <belum-terdaftar@email.apli.my.id>
+Subject: E-ticket Umrah Berhasil Terbit
+Date: Fri, 12 Jun 2026 10:00:00 +0700
+Content-Type: text/plain; charset="utf-8"
+
+Inbox ini belum dibuat.
+MAIL;
+
+        $this->expectExceptionMessage('Inbox belum terdaftar untuk group SaaS mana pun.');
+
+        app(InboundEmailService::class)->ingest($rawEmail);
     }
 }

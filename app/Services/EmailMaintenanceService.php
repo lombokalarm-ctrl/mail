@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Email;
+use App\Models\Group;
 use App\Models\Inbox;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -34,6 +35,19 @@ class EmailMaintenanceService
             }
 
             $inbox->delete();
+        });
+    }
+
+    public function deleteGroup(Group $group): void
+    {
+        DB::transaction(function () use ($group): void {
+            $group->loadMissing('inboxes');
+
+            foreach ($group->inboxes as $inbox) {
+                $this->deleteInbox($inbox);
+            }
+
+            $group->delete();
         });
     }
 }

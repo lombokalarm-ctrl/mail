@@ -8,6 +8,7 @@
             </div>
 
             <div class="flex flex-wrap gap-3">
+                <a href="{{ route('admin.groups.index') }}" class="btn-secondary px-4 py-2.5">Kelola Group</a>
                 <a href="{{ route('admin.inboxes.index') }}" class="btn-secondary px-4 py-2.5">Kelola Inbox</a>
                 <a href="{{ route('admin.emails.index') }}" class="btn-primary px-4 py-2.5">Kelola Email</a>
             </div>
@@ -19,11 +20,16 @@
     @endphp
 
     <div class="space-y-6">
-        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+            <div class="metric-card">
+                <p class="metric-label">Total Group</p>
+                <p class="metric-value">{{ number_format($totalGroups) }}</p>
+                <p class="metric-hint">Customer SaaS aktif</p>
+            </div>
             <div class="metric-card">
                 <p class="metric-label">Total Inbox</p>
                 <p class="metric-value">{{ number_format($totalInboxes) }}</p>
-                <p class="metric-hint">Inbox catch-all aktif</p>
+                <p class="metric-hint">Inbox terdaftar ke group</p>
             </div>
             <div class="metric-card">
                 <p class="metric-label">Total Email</p>
@@ -43,6 +49,13 @@
         </div>
 
         <div class="quick-actions">
+            <a href="{{ route('admin.groups.index') }}" class="quick-action-card">
+                <div>
+                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Group Manager</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Atur token viewer per customer dan kelola inbox SaaS tanpa API manual.</p>
+                </div>
+                <span class="status-badge-blue">{{ number_format($totalGroups) }}</span>
+            </a>
             <a href="{{ route('admin.inboxes.index') }}" class="quick-action-card">
                 <div>
                     <p class="text-sm font-semibold text-slate-900 dark:text-white">Inbox Manager</p>
@@ -100,7 +113,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-slate-950 dark:text-white">Inbox Terbaru</h3>
-                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Inbox catch-all yang baru terbentuk otomatis.</p>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Inbox terbaru yang sudah dipetakan ke group pelanggan.</p>
                     </div>
                     <a href="{{ route('admin.inboxes.index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">Lihat semua</a>
                 </div>
@@ -120,7 +133,7 @@
                         </div>
                     @empty
                         <p class="empty-state">
-                            Belum ada inbox. Inbox akan dibuat otomatis saat email pertama masuk.
+                            Belum ada inbox. Tambahkan inbox ke group lebih dulu lewat API backend.
                         </p>
                     @endforelse
                 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attachment;
 use App\Models\Email;
+use App\Models\Group;
 use App\Models\Inbox;
 use Illuminate\View\View;
 
@@ -33,13 +34,14 @@ class DashboardController extends Controller
 
         return view('dashboard', [
             'totalInboxes' => Inbox::query()->count(),
+            'totalGroups' => Group::query()->count(),
             'totalEmails' => Email::query()->count(),
             'totalAttachments' => Attachment::query()->count(),
             'emailsToday' => Email::query()->whereDate('received_at', now()->toDateString())->count(),
             'chartData' => $chartData,
-            'recentInboxes' => Inbox::query()->withCount('emails')->latest()->limit(6)->get(),
+            'recentInboxes' => Inbox::query()->with(['group'])->withCount('emails')->latest()->limit(6)->get(),
             'recentEmails' => Email::query()
-                ->with(['inbox', 'attachments'])
+                ->with(['inbox.group', 'attachments'])
                 ->latest('received_at')
                 ->limit(10)
                 ->get(),

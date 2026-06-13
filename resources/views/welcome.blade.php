@@ -44,7 +44,7 @@
                         Viewer modern untuk semua email wildcard di domain Anda.
                     </h1>
                     <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
-                        Setiap email ke `*@email.apli.my.id` otomatis diterima, dibuatkan inbox, disimpan ke PostgreSQL, dan siap dibuka melalui URL viewer bertoken.
+                        Setiap email ke inbox yang sudah didaftarkan di `email.apli.my.id` diterima, disimpan ke PostgreSQL, lalu dibuka melalui URL viewer bertoken per group.
                     </p>
 
                     <div class="mt-8 flex flex-wrap gap-4">
@@ -55,7 +55,7 @@
                     <div class="mt-10 grid gap-4 sm:grid-cols-3">
                         <div class="glass-banner">
                             <p class="text-3xl font-semibold text-slate-950 dark:text-white">Catch-All</p>
-                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Inbox tercipta otomatis tanpa pembuatan akun email.</p>
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Inbox didaftarkan ke group pelanggan dan memakai token viewer khusus.</p>
                         </div>
                         <div class="glass-banner">
                             <p class="text-3xl font-semibold text-slate-950 dark:text-white">Viewer URL</p>

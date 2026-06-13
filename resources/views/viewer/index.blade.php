@@ -20,6 +20,7 @@
                 <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ $inbox->inbox_name . '@' . config('apli_mail.domain') }}</p>
                 <div class="mt-4 flex flex-wrap gap-3">
                     <span class="status-badge-blue">{{ $emails->total() }} email</span>
+                    <span class="status-badge-slate">Group: {{ $inbox->group?->name ?: '-' }}</span>
                     <span class="status-badge-slate">Token: {{ $inbox->access_token }}</span>
                 </div>
             </div>

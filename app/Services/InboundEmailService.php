@@ -45,7 +45,7 @@ class InboundEmailService
             $bodyText,
             $receivedAt
         ): Email {
-            $inbox = $this->findOrCreateInbox($inboxName);
+            $inbox = $this->resolveInbox($inboxName);
 
             $email = Email::query()->create([
                 'inbox_id' => $inbox->id,
@@ -60,7 +60,7 @@ class InboundEmailService
 
             $this->storeAttachments($message, $email);
 
-            return $email->load(['inbox', 'attachments']);
+            return $email->load(['inbox.group', 'attachments']);
         });
     }
 
@@ -141,18 +141,19 @@ class InboundEmailService
         return Str::before($recipientEmail, '@');
     }
 
-    protected function findOrCreateInbox(string $inboxName): Inbox
+    protected function resolveInbox(string $inboxName): Inbox
     {
         $normalized = strtolower(trim($inboxName));
-        $slug = $this->slugifyInboxName($normalized);
+        $inbox = Inbox::query()
+            ->with('group')
+            ->where('inbox_name', $normalized)
+            ->first();
 
-        return Inbox::query()->firstOrCreate(
-            ['slug' => $slug],
-            [
-                'inbox_name' => $normalized,
-                'access_token' => $this->generateAccessToken(),
-            ]
-        );
+        if (! $inbox) {
+            throw new RuntimeException('Inbox belum terdaftar untuk group SaaS mana pun.');
+        }
+
+        return $inbox;
     }
 
     protected function storeAttachments(Message $message, Email $email): void
@@ -205,26 +206,6 @@ class InboundEmailService
             ->withMaxInputLength(500_000);
 
         return (new HtmlSanitizer($config))->sanitize($html);
-    }
-
-    protected function generateAccessToken(): string
-    {
-        do {
-            $token = strtolower(Str::random(6));
-        } while (Inbox::query()->where('access_token', $token)->exists());
-
-        return $token;
-    }
-
-    protected function slugifyInboxName(string $name): string
-    {
-        $slug = Str::slug($name, '-');
-
-        if ($slug !== '') {
-            return $slug;
-        }
-
-        return trim((string) preg_replace('/[^a-z0-9]+/', '-', strtolower($name)), '-') ?: strtolower(Str::random(8));
     }
 
     protected function parseEmailAddress(?string $value): ?string

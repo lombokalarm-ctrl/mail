@@ -1,10 +1,11 @@
 # APLI Mail
 
-APLI Mail adalah aplikasi web catch-all email viewer untuk domain `email.apli.my.id`. Semua email ke alamat `*@email.apli.my.id` dapat diterima tanpa membuat akun lebih dulu, disimpan ke PostgreSQL, lalu ditampilkan melalui viewer web bertoken dan dashboard admin.
+APLI Mail adalah aplikasi web catch-all email viewer untuk domain `email.apli.my.id`. Email ke inbox yang sudah didaftarkan ke group SaaS akan diterima, disimpan ke PostgreSQL, lalu ditampilkan melalui viewer web bertoken dan dashboard admin.
 
 ## Fitur Utama
 
-- Auto create inbox berdasarkan local-part email.
+- Group SaaS dengan token viewer manual per customer.
+- Satu group dapat memiliki banyak inbox terdaftar.
 - URL viewer bertoken dengan format `/view/{inbox_name}-{token}`.
 - Daftar email terbaru, pencarian sender/subject, pagination, dan indikator lampiran.
 - Detail email dengan HTML yang telah disanitasi dan fallback text content.
@@ -26,7 +27,8 @@ APLI Mail adalah aplikasi web catch-all email viewer untuk domain `email.apli.my
 
 ## Struktur Data
 
-- `inboxes`: inbox dinamis, slug, dan access token viewer.
+- `groups`: customer/subscriber, token viewer, dan status group.
+- `inboxes`: inbox terdaftar yang terhubung ke group.
 - `emails`: metadata email, body HTML, body teks, dan waktu diterima.
 - `attachments`: file lampiran, path storage, ukuran, dan MIME type.
 
@@ -115,7 +117,8 @@ Catatan deployment:
 
 ## Pipeline Catch-All
 
-APLI Mail menyediakan command berikut untuk menerima raw email dari Postfix:
+APLI Mail menyediakan command berikut untuk menerima raw email dari Postfix.
+Inbox penerima harus sudah terdaftar lebih dulu pada group yang benar:
 
 ```bash
 php artisan mail:ingest --sync --file=/path/to/message.eml

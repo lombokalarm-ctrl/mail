@@ -3,13 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Group;
-use App\Models\Inbox;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
- * @extends Factory<Inbox>
+ * @extends Factory<Group>
  */
-class InboxFactory extends Factory
+class GroupFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,12 +18,10 @@ class InboxFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->slug(2);
-
         return [
-            'group_id' => Group::factory(),
-            'inbox_name' => $name,
-            'slug' => $name,
+            'name' => fake()->unique()->company(),
+            'viewer_token' => strtolower(Str::random(10)),
+            'status' => 'active',
         ];
     }
 }

@@ -14,12 +14,18 @@ class InboxController extends Controller
         $search = trim((string) $request->string('q'));
 
         $inboxes = Inbox::query()
+            ->with('group')
             ->withCount('emails')
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($nested) use ($search): void {
                     $nested
                         ->where('inbox_name', 'like', "%{$search}%")
-                        ->orWhere('slug', 'like', "%{$search}%");
+                        ->orWhere('slug', 'like', "%{$search}%")
+                        ->orWhereHas('group', function ($groupQuery) use ($search): void {
+                            $groupQuery
+                                ->where('name', 'like', "%{$search}%")
+                                ->orWhere('viewer_token', 'like', "%{$search}%");
+                        });
                 });
             })
             ->latest()
@@ -28,6 +34,12 @@ class InboxController extends Controller
         $inboxes->getCollection()->transform(function (Inbox $inbox): array {
             return [
                 'id' => $inbox->id,
+                'group' => [
+                    'id' => $inbox->group?->id,
+                    'name' => $inbox->group?->name,
+                    'viewer_token' => $inbox->group?->viewer_token,
+                    'status' => $inbox->group?->status,
+                ],
                 'inbox_name' => $inbox->inbox_name,
                 'slug' => $inbox->slug,
                 'access_token' => $inbox->access_token,
@@ -43,12 +55,21 @@ class InboxController extends Controller
 
     public function show(Inbox $inbox): JsonResponse
     {
-        $inbox->load(['emails' => fn ($query) => $query->latest('received_at')->limit(20)->withCount('attachments')]);
+        $inbox->load([
+            'group',
+            'emails' => fn ($query) => $query->latest('received_at')->limit(20)->withCount('attachments'),
+        ]);
         $inbox->loadCount('emails');
 
         return response()->json([
             'data' => [
                 'id' => $inbox->id,
+                'group' => [
+                    'id' => $inbox->group?->id,
+                    'name' => $inbox->group?->name,
+                    'viewer_token' => $inbox->group?->viewer_token,
+                    'status' => $inbox->group?->status,
+                ],
                 'inbox_name' => $inbox->inbox_name,
                 'slug' => $inbox->slug,
                 'access_token' => $inbox->access_token,

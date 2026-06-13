@@ -11,7 +11,7 @@ class ViewerEmailController extends Controller
     public function __invoke(string $viewerKey, Email $email, ViewerAccessService $access): View
     {
         $inbox = $access->resolveInbox($viewerKey);
-        $email->load(['attachments', 'inbox']);
+        $email->load(['attachments', 'inbox.group']);
         $access->ensureInboxEmailMatch($inbox, $email);
 
         return view('viewer.show', [

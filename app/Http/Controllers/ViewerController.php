@@ -15,7 +15,7 @@ class ViewerController extends Controller
         $search = trim((string) $request->string('q'));
 
         $emails = Email::query()
-            ->with('attachments')
+            ->with(['attachments', 'inbox.group'])
             ->where('inbox_id', $inbox->id)
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($nested) use ($search): void {
