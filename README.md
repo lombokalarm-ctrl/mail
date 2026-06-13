@@ -87,18 +87,31 @@ cp .env.example .env
 docker compose up --build -d
 ```
 
-3. Generate key, migrasi, dan seed:
+3. Untuk deployment Docker, pastikan nilai penting di `.env` sudah sesuai:
+
+- `APP_ENV=production`
+- `APP_DEBUG=false`
+- `APP_URL=https://email.apli.my.id` untuk produksi
+- `DB_HOST=postgres`
+- `REDIS_HOST=redis`
+
+4. Jalankan migrasi dan seed:
 
 ```bash
-docker compose exec app php artisan key:generate --force
-docker compose exec app php artisan migrate --seed --force
+docker compose exec app php artisan migrate:fresh --seed --force
 docker compose exec app php artisan storage:link
 ```
 
-4. Akses aplikasi:
+5. Akses aplikasi:
 
 - Landing page: `http://localhost:8080`
 - Admin login: `http://localhost:8080/login`
+
+Catatan deployment:
+
+- Service `postgres` dan `redis` tidak diekspos ke host agar lebih aman.
+- `Dockerfile` sudah mengaktifkan ekstensi `redis` PHP untuk queue dan cache.
+- Migration `attachments` harus berjalan setelah `emails`; file timestamp di repo sudah diurutkan untuk itu.
 
 ## Pipeline Catch-All
 
@@ -120,9 +133,16 @@ Mode default akan mengirim email ke queue Redis:
 cat /path/to/message.eml | php artisan mail:ingest
 ```
 
-## Contoh Konfigurasi Postfix Catch-All
+## Konfigurasi Postfix Catch-All
 
-Contoh sederhana agar semua email ke `email.apli.my.id` diteruskan ke command Laravel:
+Repo ini menyediakan snippet dan script host-friendly di:
+
+- `ops/postfix/main.cf.snippet`
+- `ops/postfix/virtual_catchall`
+- `ops/postfix/aliases.snippet`
+- `scripts/postfix-ingest.sh`
+
+Langkah yang disarankan pada VPS:
 
 ### `/etc/postfix/main.cf`
 
@@ -140,12 +160,13 @@ virtual_alias_maps = regexp:/etc/postfix/virtual_catchall
 ### `/etc/aliases`
 
 ```conf
-apli-mail: "|/usr/bin/docker compose -f /opt/apli-mail/docker-compose.yml exec -T app php artisan mail:ingest"
+apli-mail: "|/var/www/email/scripts/postfix-ingest.sh"
 ```
 
 Lalu jalankan:
 
 ```bash
+chmod +x /var/www/email/scripts/postfix-ingest.sh
 sudo newaliases
 sudo systemctl restart postfix
 ```
@@ -153,8 +174,64 @@ sudo systemctl restart postfix
 Catatan:
 
 - Pastikan MX record domain sudah mengarah ke VPS.
-- Gunakan path `docker compose` yang sesuai dengan lokasi project.
-- Pada produksi, lebih aman menjalankan Postfix di host VPS lalu pipe ke container `app`.
+- Jalankan Postfix di host VPS lalu pipe ke container `app`.
+- Sesuaikan `APLI_MAIL_PROJECT_DIR` jika project dipasang di path selain `/var/www/email`.
+
+## Reverse Proxy Dan SSL
+
+Template reverse proxy host Nginx tersedia di `ops/nginx/email.apli.my.id.conf`.
+
+Contoh aktivasi:
+
+```bash
+sudo cp ops/nginx/email.apli.my.id.conf /etc/nginx/sites-available/email.apli.my.id
+sudo ln -sf /etc/nginx/sites-available/email.apli.my.id /etc/nginx/sites-enabled/email.apli.my.id
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+Lalu terbitkan sertifikat:
+
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d email.apli.my.id
+```
+
+## Hardening Production
+
+Checklist minimum:
+
+- Jalankan aplikasi dengan `APP_ENV=production` dan `APP_DEBUG=false`.
+- Gunakan `APP_URL=https://email.apli.my.id`.
+- Simpan `postgres` dan `redis` hanya di jaringan Docker internal.
+- Buka hanya port `22`, `80`, dan `443` di firewall host.
+- Pasang reverse proxy host Nginx di depan container.
+- Ganti password admin default dan simpan kredensial di `.env`.
+
+Contoh command UFW tersedia di `ops/ufw/commands.sh`:
+
+```bash
+sudo bash ops/ufw/commands.sh
+```
+
+## Backup Database
+
+Script backup PostgreSQL tersedia di `scripts/backup-postgres.sh`.
+
+Contoh penggunaan manual:
+
+```bash
+chmod +x /var/www/email/scripts/backup-postgres.sh
+/var/www/email/scripts/backup-postgres.sh
+```
+
+File backup akan disimpan ke `/var/backups/apli-mail` dan backup lama lebih dari 7 hari akan dihapus otomatis.
+
+Contoh cron harian jam 02:30:
+
+```cron
+30 2 * * * /var/www/email/scripts/backup-postgres.sh >> /var/log/apli-mail-backup.log 2>&1
+```
 
 ## API
 

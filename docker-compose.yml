@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   app:
     build:
@@ -40,8 +38,6 @@ services:
       POSTGRES_DB: ${DB_DATABASE:-apli_mail}
       POSTGRES_USER: ${DB_USERNAME:-apli}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-apli_secret}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -51,8 +47,6 @@ services:
     image: redis:7-alpine
     container_name: apli-mail-redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
