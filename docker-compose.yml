@@ -16,6 +16,23 @@ services:
     networks:
       - apli
 
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: apli-mail-worker
+    restart: unless-stopped
+    command: php artisan queue:work --sleep=1 --tries=3 --timeout=120
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - apli_storage:/var/www/html/storage/app
+    networks:
+      - apli
+
   nginx:
     image: nginx:1.27-alpine
     container_name: apli-mail-nginx

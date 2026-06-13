@@ -125,7 +125,10 @@ git pull origin main
 docker compose up -d --build
 docker compose exec app php artisan migrate --force
 docker compose exec app php artisan optimize:clear
+docker compose ps
 ```
+
+Pastikan ada container `apli-mail-worker` dengan status `Up`. Jika worker mati, email yang sudah diterima Postfix bisa tertahan di queue dan tidak muncul ke inbox.
 
 Tidak perlu lagi menjalankan `npm run build` di host atau menyalin `public/build` manual ke container.
 
@@ -149,6 +152,11 @@ Mode default akan mengirim email ke queue Redis:
 ```bash
 cat /path/to/message.eml | php artisan mail:ingest
 ```
+
+Penting:
+
+- Service `worker` wajib berjalan karena email inbound diproses lewat queue Redis.
+- Pada stack Docker repo ini, `docker compose up -d --build` sekarang akan menjalankan container `apli-mail-worker` untuk memproses job inbound otomatis.
 
 ## Konfigurasi Postfix Catch-All
 
