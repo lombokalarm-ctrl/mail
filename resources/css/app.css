@@ -131,6 +131,14 @@
         @apply flex flex-wrap gap-3;
     }
 
+    .admin-toolbar {
+        @apply flex flex-col gap-4 md:flex-row md:items-center md:justify-between;
+    }
+
+    .admin-toolbar-meta {
+        @apply flex flex-wrap items-center gap-3;
+    }
+
     .status-badge {
         @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
     }
@@ -169,6 +177,42 @@
 
     .empty-state {
         @apply rounded-[1.8rem] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-950/40 dark:text-slate-400;
+    }
+
+    .mobile-card {
+        @apply rounded-[1.6rem] border border-white/70 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/60;
+    }
+
+    .mobile-card-grid {
+        @apply grid gap-4 md:hidden;
+    }
+
+    .detail-pair {
+        @apply rounded-2xl bg-slate-50/90 px-4 py-3 dark:bg-slate-900/70;
+    }
+
+    .detail-pair-label {
+        @apply text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400;
+    }
+
+    .detail-pair-value {
+        @apply mt-2 text-sm text-slate-700 dark:text-slate-200;
+    }
+
+    .chart-scroll {
+        @apply -mx-2 overflow-x-auto px-2 pb-2;
+    }
+
+    .chart-grid {
+        @apply mt-8 grid min-w-[42rem] grid-cols-14 gap-3;
+    }
+
+    .quick-actions {
+        @apply grid gap-3 sm:grid-cols-2 xl:grid-cols-3;
+    }
+
+    .quick-action-card {
+        @apply glass-banner flex items-center justify-between gap-4 p-4 shadow-none transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_20px_45px_-30px_rgba(59,130,246,0.35)];
     }
 
     .pagination-shell {

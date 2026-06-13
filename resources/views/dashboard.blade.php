@@ -42,6 +42,30 @@
             </div>
         </div>
 
+        <div class="quick-actions">
+            <a href="{{ route('admin.inboxes.index') }}" class="quick-action-card">
+                <div>
+                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Inbox Manager</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Lihat inbox catch-all dan salin viewer URL lebih cepat.</p>
+                </div>
+                <span class="status-badge-blue">{{ number_format($totalInboxes) }}</span>
+            </a>
+            <a href="{{ route('admin.emails.index') }}" class="quick-action-card">
+                <div>
+                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Email Manager</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Tinjau email global, lampiran, dan aksi hapus dari satu halaman.</p>
+                </div>
+                <span class="status-badge-slate">{{ number_format($totalEmails) }}</span>
+            </a>
+            <a href="{{ route('viewer.index', ['viewerKey' => 'ahmad-alhijrah-f7k29a'], false) }}" class="quick-action-card">
+                <div>
+                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Sample Viewer</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Buka inbox demo publik untuk cek tampilan pengguna akhir.</p>
+                </div>
+                <span class="status-badge-emerald">Live</span>
+            </a>
+        </div>
+
         <div class="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
             <section class="panel-card">
                 <div class="flex items-center justify-between">
@@ -52,21 +76,23 @@
                     <span class="status-badge-blue">14 hari</span>
                 </div>
 
-                <div class="mt-8 grid grid-cols-7 gap-3 sm:grid-cols-14">
-                    @foreach ($chartData as $point)
-                        @php
-                            $height = max(16, (int) (($point['total'] / $maxChart) * 180));
-                        @endphp
-                        <div class="flex flex-col items-center gap-3">
-                            <div class="flex h-52 w-full items-end rounded-3xl bg-slate-100 px-2 py-3 dark:bg-slate-900/80">
-                                <div class="w-full rounded-2xl bg-gradient-to-t from-blue-600 to-sky-400" style="height: {{ $height }}px"></div>
+                <div class="chart-scroll">
+                    <div class="chart-grid">
+                        @foreach ($chartData as $point)
+                            @php
+                                $height = max(16, (int) (($point['total'] / $maxChart) * 180));
+                            @endphp
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="flex h-52 w-full items-end rounded-3xl bg-slate-100 px-2 py-3 dark:bg-slate-900/80">
+                                    <div class="w-full rounded-2xl bg-gradient-to-t from-blue-600 to-sky-400" style="height: {{ $height }}px"></div>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ $point['total'] }}</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">{{ $point['label'] }}</p>
+                                </div>
                             </div>
-                            <div class="text-center">
-                                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ $point['total'] }}</p>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">{{ $point['label'] }}</p>
-                            </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </section>
 
@@ -110,7 +136,36 @@
                 <a href="{{ route('admin.emails.index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">Buka daftar email</a>
             </div>
 
-            <div class="mt-6 overflow-x-auto">
+            <div class="mobile-card-grid">
+                @forelse ($recentEmails as $email)
+                    <article class="mobile-card">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $email->subject ?: '(Tanpa Subjek)' }}</p>
+                                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $email->inbox->inbox_name }} • {{ $email->received_at?->format('d M Y H:i') }}</p>
+                            </div>
+                            <span class="status-badge-slate">{{ $email->attachments->count() }}</span>
+                        </div>
+
+                        <div class="mt-4 grid gap-3">
+                            <div class="detail-pair">
+                                <p class="detail-pair-label">Sender</p>
+                                <p class="detail-pair-value">{{ $email->sender_name ?: $email->sender_email }}</p>
+                            </div>
+                            <div class="detail-pair">
+                                <p class="detail-pair-label">Preview</p>
+                                <p class="detail-pair-value line-clamp-2">{{ \Illuminate\Support\Str::limit($email->body_text ?: strip_tags($email->body_html), 110) }}</p>
+                            </div>
+                        </div>
+                    </article>
+                @empty
+                    <div class="empty-state">
+                        Belum ada email yang tersimpan.
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="mt-6 hidden overflow-x-auto md:block">
                 <table class="data-table">
                     <thead>
                         <tr class="table-head">

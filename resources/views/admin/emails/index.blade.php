@@ -8,13 +8,22 @@
     </x-slot>
 
     <section class="panel-card">
-        <form method="GET" class="flex flex-col gap-4 md:flex-row">
-            <div class="flex-1">
-                <label for="q" class="sr-only">Cari email</label>
-                <input id="q" type="search" name="q" value="{{ $search }}" placeholder="Cari subject, sender, atau recipient..." class="field-input" />
+        <div class="admin-toolbar">
+            <form method="GET" class="flex flex-1 flex-col gap-4 md:flex-row">
+                <div class="flex-1">
+                    <label for="q" class="sr-only">Cari email</label>
+                    <input id="q" type="search" name="q" value="{{ $search }}" placeholder="Cari subject, sender, atau recipient..." class="field-input" />
+                </div>
+                <button type="submit" class="btn-primary">Cari Email</button>
+            </form>
+
+            <div class="admin-toolbar-meta">
+                <span class="status-badge-blue">{{ $emails->total() }} email</span>
+                @if ($search)
+                    <span class="status-badge-slate">Filter: {{ $search }}</span>
+                @endif
             </div>
-            <button type="submit" class="btn-primary">Cari Email</button>
-        </form>
+        </div>
 
         <div class="mt-6 space-y-4">
             @forelse ($emails as $email)
@@ -41,12 +50,12 @@
                             </div>
                         </div>
 
-                        <div class="flex flex-wrap gap-2">
-                            <a href="{{ route('viewer.show', ['viewerKey' => $email->inbox->viewer_key, 'email' => $email]) }}" target="_blank" class="btn-secondary px-4 py-2 text-xs">Lihat Detail</a>
+                        <div class="grid w-full gap-2 sm:flex sm:w-auto sm:flex-wrap">
+                            <a href="{{ route('viewer.show', ['viewerKey' => $email->inbox->viewer_key, 'email' => $email]) }}" target="_blank" class="btn-secondary w-full px-4 py-2 text-xs sm:w-auto">Lihat Detail</a>
                             <form method="POST" action="{{ route('admin.emails.destroy', $email) }}" onsubmit="return confirm('Hapus email dan seluruh lampirannya?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn-danger px-4 py-2 text-xs">Hapus</button>
+                                <button type="submit" class="btn-danger w-full px-4 py-2 text-xs sm:w-auto">Hapus</button>
                             </form>
                         </div>
                     </div>

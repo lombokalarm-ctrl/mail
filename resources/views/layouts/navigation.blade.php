@@ -45,6 +45,10 @@
 
     <div x-cloak x-show="open" x-transition class="border-t border-white/60 bg-white/90 px-4 py-4 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/90 md:hidden">
         <div class="space-y-2">
+            <div class="mb-3 rounded-[1.4rem] border border-white/70 bg-white/80 px-4 py-3 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
+                <p class="text-sm font-medium text-slate-900 dark:text-white">{{ Auth::user()->name }}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">{{ Auth::user()->email }}</p>
+            </div>
             <a href="{{ route('dashboard') }}" class="mobile-nav-pill">Dashboard</a>
             <a href="{{ route('admin.inboxes.index') }}" class="mobile-nav-pill">Inbox</a>
             <a href="{{ route('admin.emails.index') }}" class="mobile-nav-pill">Email</a>
