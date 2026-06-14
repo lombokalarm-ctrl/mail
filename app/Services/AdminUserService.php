@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -9,16 +10,27 @@ use InvalidArgumentException;
 
 class AdminUserService
 {
-    public function createManagedUser(array $data): User
+    public function createManagedGroupAdmin(array $data): User
     {
-        $payload = $this->normalizePayload($data, true);
+        $groupPayload = $this->normalizeGroupPayload($data);
+        $userPayload = $this->normalizeUserPayload([
+            ...$data,
+            'role' => User::ROLE_GROUP_ADMIN,
+        ], true);
 
-        return DB::transaction(fn () => User::query()->create($payload));
+        return DB::transaction(function () use ($groupPayload, $userPayload): User {
+            $group = Group::query()->create($groupPayload);
+
+            return User::query()->create([
+                ...$userPayload,
+                'group_id' => $group->id,
+            ]);
+        });
     }
 
     public function updateManagedUser(User $user, array $data): User
     {
-        $payload = $this->normalizePayload([
+        $payload = $this->normalizeUserPayload([
             ...$data,
             'must_change_password' => $data['must_change_password'] ?? $user->must_change_password,
         ], false);
@@ -43,12 +55,23 @@ class AdminUserService
         $user->delete();
     }
 
-    protected function normalizePayload(array $data, bool $isCreate): array
+    protected function normalizeGroupPayload(array $data): array
+    {
+        return [
+            'name' => trim((string) $data['group_name']),
+            'viewer_token' => strtolower(trim((string) $data['viewer_token'])),
+            'status' => trim((string) ($data['group_status'] ?? 'active')),
+        ];
+    }
+
+    protected function normalizeUserPayload(array $data, bool $isCreate): array
     {
         $role = $data['role'] ?? User::ROLE_GROUP_ADMIN;
         $groupId = $data['group_id'] ?? null;
 
-        if ($role === User::ROLE_GROUP_ADMIN && ! $groupId) {
+        $willCreateGroup = $isCreate && array_key_exists('group_name', $data) && array_key_exists('viewer_token', $data);
+
+        if ($role === User::ROLE_GROUP_ADMIN && ! $groupId && ! $willCreateGroup) {
             throw new InvalidArgumentException('Admin group wajib terkait ke satu group.');
         }
 

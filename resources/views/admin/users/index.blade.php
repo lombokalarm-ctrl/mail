@@ -4,7 +4,7 @@
             <div>
                 <p class="section-kicker">User Manager</p>
                 <h2 class="section-title">Kelola User Admin Group</h2>
-                <p class="section-copy">Buat akun admin pelanggan, atur group yang diakses, reset password awal, dan kelola status akun berlangganan.</p>
+                <p class="section-copy">Onboarding pelanggan baru kini membuat group, viewer token, dan akun admin group dalam satu langkah.</p>
             </div>
 
             <div class="flex flex-wrap gap-3">
@@ -30,15 +30,42 @@
             <section class="panel-card">
                 <div class="flex items-center justify-between gap-3">
                     <div>
-                        <h3 class="text-lg font-semibold text-slate-950 dark:text-white">Buat Admin Group Baru</h3>
-                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Akun baru langsung aktif dan dapat dipaksa ganti password saat login pertama.</p>
+                        <h3 class="text-lg font-semibold text-slate-950 dark:text-white">Onboarding Customer Baru</h3>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Form ini membuat group baru, viewer token pelanggan, dan akun admin group sekaligus.</p>
                     </div>
-                    <span class="status-badge-blue">{{ $users->total() }} user</span>
+                    <span class="status-badge-blue">{{ $groups->count() }} group</span>
                 </div>
 
                 <form method="POST" action="{{ route('admin.users.store', [], false) }}" class="mt-6 grid gap-4">
                     @csrf
                     <input type="hidden" name="role" value="{{ \App\Models\User::ROLE_GROUP_ADMIN }}" />
+
+                    <div class="rounded-[1.6rem] border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-800/80 dark:bg-slate-900/70">
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Data Group</p>
+                        <div class="mt-4 grid gap-4 md:grid-cols-2">
+                            <div>
+                                <label for="group_name" class="detail-pair-label">Nama Group</label>
+                                <input id="group_name" type="text" name="group_name" value="{{ old('group_name') }}" class="field-input mt-2" placeholder="Contoh: Acme Travel" required />
+                            </div>
+                            <div>
+                                <label for="viewer_token" class="detail-pair-label">Viewer Token</label>
+                                <input id="viewer_token" type="text" name="viewer_token" value="{{ old('viewer_token') }}" class="field-input mt-2" placeholder="Contoh: acmetravel2026" pattern="[A-Za-z0-9]+" required />
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label for="group_status" class="detail-pair-label">Status Group</label>
+                            <select id="group_status" name="group_status" class="field-input mt-2" required>
+                                <option value="active" @selected(old('group_status', 'active') === 'active')>Active</option>
+                                <option value="trial" @selected(old('group_status') === 'trial')>Trial</option>
+                                <option value="inactive" @selected(old('group_status') === 'inactive')>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="rounded-[1.6rem] border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-800/80 dark:bg-slate-900/70">
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Data Admin Group</p>
+                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">User ini otomatis terhubung ke group yang baru dibuat.</p>
+                    </div>
 
                     <div class="grid gap-4 md:grid-cols-2">
                         <div>
@@ -49,16 +76,6 @@
                             <label for="user_email" class="detail-pair-label">Email Login</label>
                             <input id="user_email" type="email" name="email" value="{{ old('email') }}" class="field-input mt-2" placeholder="admin@acme.test" required />
                         </div>
-                    </div>
-
-                    <div>
-                        <label for="user_group_id" class="detail-pair-label">Group Pelanggan</label>
-                        <select id="user_group_id" name="group_id" class="field-input mt-2" required>
-                            <option value="">Pilih group...</option>
-                            @foreach ($groups as $group)
-                                <option value="{{ $group->id }}" @selected((string) old('group_id') === (string) $group->id)>{{ $group->name }}</option>
-                            @endforeach
-                        </select>
                     </div>
 
                     <div class="grid gap-4 md:grid-cols-2">
@@ -78,7 +95,7 @@
                     </label>
 
                     <div class="flex justify-end">
-                        <button type="submit" class="btn-primary px-4 py-3">Simpan User</button>
+                        <button type="submit" class="btn-primary px-4 py-3">Buat Customer</button>
                     </div>
                 </form>
             </section>
@@ -87,7 +104,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <h3 class="text-lg font-semibold text-slate-950 dark:text-white">Filter User</h3>
-                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Cari user berdasarkan nama, email login, group, role, atau status akun.</p>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Cari admin group berdasarkan nama, email login, group, atau status akun.</p>
                     </div>
                     <span class="status-badge-slate">Admin SaaS</span>
                 </div>
@@ -109,24 +126,13 @@
                         </div>
                     </div>
 
-                    <div class="grid gap-4 lg:grid-cols-2">
-                        <div>
-                            <label for="role_filter" class="detail-pair-label">Role</label>
-                            <select id="role_filter" name="role" class="field-input mt-2">
-                                <option value="">Semua role</option>
-                                @foreach ($roleOptions as $value => $label)
-                                    <option value="{{ $value }}" @selected($role === $value)>{{ $label }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <label for="status_filter" class="detail-pair-label">Status</label>
-                            <select id="status_filter" name="status" class="field-input mt-2">
-                                <option value="">Semua status</option>
-                                <option value="active" @selected($status === 'active')>Active</option>
-                                <option value="inactive" @selected($status === 'inactive')>Inactive</option>
-                            </select>
-                        </div>
+                    <div>
+                        <label for="status_filter" class="detail-pair-label">Status</label>
+                        <select id="status_filter" name="status" class="field-input mt-2">
+                            <option value="">Semua status</option>
+                            <option value="active" @selected($status === 'active')>Active</option>
+                            <option value="inactive" @selected($status === 'inactive')>Inactive</option>
+                        </select>
                     </div>
 
                     <div class="flex justify-end">
@@ -229,6 +235,7 @@
 
                                 <div class="rounded-[1.6rem] border border-slate-200/80 bg-slate-50/70 p-4 text-sm text-slate-600 dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-300">
                                     <p><span class="font-semibold text-slate-900 dark:text-white">Group:</span> {{ $managedUser->group?->name ?: '-' }}</p>
+                                    <p class="mt-2"><span class="font-semibold text-slate-900 dark:text-white">Viewer Token:</span> {{ $managedUser->group?->viewer_token ?: '-' }}</p>
                                     <p class="mt-2"><span class="font-semibold text-slate-900 dark:text-white">Dibuat:</span> {{ $managedUser->created_at?->format('d M Y H:i') }}</p>
                                     <p class="mt-2"><span class="font-semibold text-slate-900 dark:text-white">Update terakhir:</span> {{ $managedUser->updated_at?->format('d M Y H:i') }}</p>
                                 </div>

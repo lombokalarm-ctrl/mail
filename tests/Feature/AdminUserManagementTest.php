@@ -15,22 +15,26 @@ class AdminUserManagementTest extends TestCase
     public function test_saas_admin_can_create_group_admin_user(): void
     {
         $saasAdmin = User::factory()->saasAdmin()->create();
-        $group = Group::factory()->create();
 
         $this->actingAs($saasAdmin)
             ->post(route('admin.users.store'), [
+                'group_name' => 'Acme Travel',
+                'viewer_token' => 'acmetravel2026',
+                'group_status' => 'active',
                 'name' => 'Admin Acme',
                 'email' => 'admin-acme@example.com',
                 'role' => User::ROLE_GROUP_ADMIN,
-                'group_id' => $group->id,
                 'password' => 'TempPass123!',
                 'password_confirmation' => 'TempPass123!',
                 'must_change_password' => '1',
             ])
             ->assertRedirect();
 
+        $group = Group::query()->where('viewer_token', 'acmetravel2026')->firstOrFail();
         $user = User::query()->where('email', 'admin-acme@example.com')->firstOrFail();
 
+        $this->assertSame('Acme Travel', $group->name);
+        $this->assertSame('active', $group->status);
         $this->assertSame(User::ROLE_GROUP_ADMIN, $user->role);
         $this->assertSame($group->id, $user->group_id);
         $this->assertTrue($user->must_change_password);
@@ -85,5 +89,20 @@ class AdminUserManagementTest extends TestCase
             'group_id' => $secondGroup->id,
             'is_active' => false,
         ]);
+    }
+
+    public function test_saas_admin_dashboard_hides_global_inbox_panels(): void
+    {
+        $saasAdmin = User::factory()->saasAdmin()->create([
+            'must_change_password' => false,
+        ]);
+
+        $this->actingAs($saasAdmin)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('Customer Terbaru')
+            ->assertSee('User Manager')
+            ->assertDontSee('Inbox Manager')
+            ->assertDontSee('Inbox Terbaru');
     }
 }

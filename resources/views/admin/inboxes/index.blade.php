@@ -21,6 +21,37 @@
     </x-slot>
 
     <div class="space-y-6">
+        @if ($errors->any())
+            <div class="glass-banner border-rose-200/80 bg-rose-50/85 text-sm text-rose-800 shadow-none dark:border-rose-900/70 dark:bg-rose-950/40 dark:text-rose-200">
+                <p class="font-semibold">Ada input inbox yang perlu diperbaiki.</p>
+                <ul class="mt-2 list-disc space-y-1 pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if (session('import_report'))
+            <div class="glass-banner border-sky-200/80 bg-sky-50/85 text-sm text-sky-900 shadow-none dark:border-sky-900/70 dark:bg-sky-950/40 dark:text-sky-100">
+                <p class="font-semibold">Ringkasan import inbox.</p>
+                <p class="mt-2">
+                    {{ session('import_report.created') }} inbox berhasil ditambahkan.
+                    @if (count(session('import_report.skipped', [])) > 0)
+                        {{ count(session('import_report.skipped', [])) }} baris dilewati.
+                    @endif
+                </p>
+
+                @if (count(session('import_report.skipped', [])) > 0)
+                    <ul class="mt-2 list-disc space-y-1 pl-5">
+                        @foreach (array_slice(session('import_report.skipped', []), 0, 8) as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        @endif
+
         <section class="panel-card">
             <div class="flex items-center justify-between gap-3">
                 <div>
@@ -60,6 +91,58 @@
 
                 <div class="flex justify-end">
                     <button type="submit" class="btn-primary px-4 py-3">Tambah Inbox</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel-card">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-950 dark:text-white">Import Inbox</h3>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $currentUser->isSaasAdmin() ? 'Upload file CSV atau XLSX untuk menambahkan banyak inbox sekaligus ke group yang dipilih.' : 'Upload file CSV atau XLSX untuk menambahkan banyak inbox sekaligus ke group Anda.' }}</p>
+                </div>
+                <span class="status-badge-slate">CSV / XLSX</span>
+            </div>
+
+            <form method="POST" action="{{ route('admin.inboxes.import', [], false) }}" enctype="multipart/form-data" class="mt-6 grid gap-4">
+                @csrf
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    @if ($currentUser->isSaasAdmin())
+                        <div>
+                            <label for="import_group_id" class="detail-pair-label">Group Tujuan</label>
+                            <select id="import_group_id" name="group_id" class="field-input mt-2" required>
+                                <option value="">Pilih group...</option>
+                                @foreach ($groupOptions as $group)
+                                    <option value="{{ $group->id }}" @selected((string) old('group_id') === (string) $group->id)>{{ $group->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @else
+                        <input type="hidden" name="group_id" value="{{ $currentUser->group_id }}" />
+                        <div>
+                            <label class="detail-pair-label">Group Tujuan</label>
+                            <p class="field-input mt-2 !py-3">{{ $currentUser->group?->name }}</p>
+                        </div>
+                    @endif
+
+                    <div>
+                        <label for="import_file" class="detail-pair-label">File Import</label>
+                        <input id="import_file" type="file" name="import_file" accept=".csv,.txt,.xlsx" class="field-input mt-2 !py-2.5" required />
+                    </div>
+                </div>
+
+                <div class="rounded-[1.5rem] border border-slate-200/80 bg-slate-50/70 p-4 text-sm text-slate-600 dark:border-slate-800/80 dark:bg-slate-900/60 dark:text-slate-300">
+                    <p class="font-semibold text-slate-900 dark:text-white">Format yang didukung</p>
+                    <ul class="mt-2 list-disc space-y-1 pl-5">
+                        <li>Satu inbox per baris, misalnya `support-acme` atau `support-acme@{{ config('apli_mail.domain') }}`.</li>
+                        <li>Jika baris pertama adalah header seperti `inbox_name` atau `email`, sistem akan membacanya otomatis.</li>
+                        <li>Inbox duplikat di file atau yang sudah terdaftar akan dilewati otomatis.</li>
+                    </ul>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="btn-primary px-4 py-3">Import Inbox</button>
                 </div>
             </form>
         </section>

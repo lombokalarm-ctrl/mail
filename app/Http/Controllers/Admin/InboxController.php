@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Models\Inbox;
 use App\Services\EmailMaintenanceService;
+use App\Services\InboxImportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use RuntimeException;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -66,6 +68,47 @@ class InboxController extends Controller
         ]);
 
         return back()->with('status', 'Inbox berhasil dibuat.');
+    }
+
+    public function import(Request $request, InboxImportService $importService): RedirectResponse
+    {
+        $data = $request->validate([
+            'group_id' => ['required', 'exists:groups,id'],
+            'import_file' => [
+                'required',
+                'file',
+                'max:10240',
+                function (string $attribute, $value, $fail): void {
+                    $extension = strtolower($value->getClientOriginalExtension());
+
+                    if (! in_array($extension, ['csv', 'txt', 'xlsx'], true)) {
+                        $fail('Format file tidak didukung. Gunakan CSV atau XLSX.');
+                    }
+                },
+            ],
+        ]);
+
+        $user = $request->user();
+        $groupId = $user->isGroupAdmin() ? $user->group_id : (int) $data['group_id'];
+        $group = Group::query()->findOrFail($groupId);
+
+        try {
+            $report = $importService->import($group, $request->file('import_file'));
+        } catch (RuntimeException $exception) {
+            return back()->withErrors([
+                'import_file' => $exception->getMessage(),
+            ])->withInput();
+        }
+
+        $status = "{$report['created']} inbox berhasil diimport ke group {$group->name}.";
+
+        if (count($report['skipped']) > 0) {
+            $status .= ' '.count($report['skipped']).' baris dilewati.';
+        }
+
+        return back()
+            ->with('status', $status)
+            ->with('import_report', $report);
     }
 
     public function update(Request $request, Inbox $inbox): RedirectResponse

@@ -15,8 +15,9 @@
             @if (Auth::user()->isSaasAdmin())
                 <a href="{{ route('admin.groups.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.groups.*') ? 'nav-pill-active' : '' }}">Group</a>
                 <a href="{{ route('admin.users.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.users.*') ? 'nav-pill-active' : '' }}">User</a>
+            @else
+                <a href="{{ route('admin.inboxes.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.inboxes.*') ? 'nav-pill-active' : '' }}">Inbox</a>
             @endif
-            <a href="{{ route('admin.inboxes.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.inboxes.*') ? 'nav-pill-active' : '' }}">Inbox</a>
             <a href="{{ route('admin.emails.index', [], false) }}" class="nav-pill {{ request()->routeIs('admin.emails.*') ? 'nav-pill-active' : '' }}">Email</a>
             <a href="{{ route('profile.edit', [], false) }}" class="nav-pill {{ request()->routeIs('profile.*') ? 'nav-pill-active' : '' }}">Profil</a>
         </div>
@@ -58,8 +59,9 @@
             @if (Auth::user()->isSaasAdmin())
                 <a href="{{ route('admin.groups.index', [], false) }}" class="mobile-nav-pill">Group</a>
                 <a href="{{ route('admin.users.index', [], false) }}" class="mobile-nav-pill">User</a>
+            @else
+                <a href="{{ route('admin.inboxes.index', [], false) }}" class="mobile-nav-pill">Inbox</a>
             @endif
-            <a href="{{ route('admin.inboxes.index', [], false) }}" class="mobile-nav-pill">Inbox</a>
             <a href="{{ route('admin.emails.index', [], false) }}" class="mobile-nav-pill">Email</a>
             <a href="{{ route('profile.edit', [], false) }}" class="mobile-nav-pill">Profil</a>
             <button type="button" data-theme-toggle class="mobile-nav-pill w-full text-left">Mode Gelap</button>

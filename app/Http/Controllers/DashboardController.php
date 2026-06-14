@@ -6,6 +6,7 @@ use App\Models\Attachment;
 use App\Models\Email;
 use App\Models\Group;
 use App\Models\Inbox;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -44,6 +45,7 @@ class DashboardController extends Controller
                 ->when($groupId, fn ($query) => $query->where('group_id', $groupId))
                 ->count(),
             'totalGroups' => $groupId ? 1 : Group::query()->count(),
+            'totalGroupAdmins' => $groupId ? 1 : User::query()->where('role', User::ROLE_GROUP_ADMIN)->count(),
             'totalEmails' => Email::query()
                 ->when($groupId, fn ($query) => $query->whereHas('inbox', fn ($inboxQuery) => $inboxQuery->where('group_id', $groupId)))
                 ->count(),
@@ -62,6 +64,16 @@ class DashboardController extends Controller
                 ->latest()
                 ->limit(6)
                 ->get(),
+            'recentGroups' => $groupId
+                ? collect()
+                : Group::query()
+                    ->withCount([
+                        'users as admin_users_count' => fn ($query) => $query->where('role', User::ROLE_GROUP_ADMIN),
+                        'inboxes',
+                    ])
+                    ->latest()
+                    ->limit(6)
+                    ->get(),
             'recentEmails' => Email::query()
                 ->with(['inbox.group', 'attachments'])
                 ->when($groupId, fn ($query) => $query->whereHas('inbox', fn ($inboxQuery) => $inboxQuery->where('group_id', $groupId)))

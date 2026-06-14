@@ -31,6 +31,7 @@ Route::middleware(['auth', 'verified', 'active_user', 'password_changed'])->grou
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/dashboard/inboxes', [AdminInboxController::class, 'index'])->name('admin.inboxes.index');
     Route::post('/dashboard/inboxes', [AdminInboxController::class, 'store'])->name('admin.inboxes.store');
+    Route::post('/dashboard/inboxes/import', [AdminInboxController::class, 'import'])->name('admin.inboxes.import');
     Route::patch('/dashboard/inboxes/{inbox}', [AdminInboxController::class, 'update'])->name('admin.inboxes.update');
     Route::delete('/dashboard/inboxes/{inbox}', [AdminInboxController::class, 'destroy'])->name('admin.inboxes.destroy');
     Route::get('/dashboard/emails', [AdminEmailController::class, 'index'])->name('admin.emails.index');

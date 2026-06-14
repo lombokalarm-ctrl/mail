@@ -60,21 +60,23 @@ class UserController extends Controller
     public function store(Request $request, AdminUserService $userService): RedirectResponse
     {
         $data = $request->validate([
+            'group_name' => ['required', 'string', 'max:255'],
+            'viewer_token' => ['required', 'string', 'max:64', 'alpha_num', Rule::unique('groups', 'viewer_token')],
+            'group_status' => ['required', 'string', 'max:50'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users', 'email')],
             'role' => ['required', Rule::in([User::ROLE_GROUP_ADMIN])],
-            'group_id' => ['required', 'exists:groups,id'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'must_change_password' => ['nullable', 'boolean'],
         ]);
 
-        $userService->createManagedUser([
+        $userService->createManagedGroupAdmin([
             ...$data,
             'must_change_password' => (bool) ($data['must_change_password'] ?? true),
             'is_active' => true,
         ]);
 
-        return back()->with('status', 'User admin group berhasil dibuat.');
+        return back()->with('status', 'Group baru, viewer token, dan user admin group berhasil dibuat.');
     }
 
     public function update(Request $request, User $user, AdminUserService $userService): RedirectResponse
