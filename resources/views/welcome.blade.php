@@ -4,10 +4,13 @@
     $appName = config('app.name', 'APLI Mail');
     $canonicalUrl = url()->current();
     $metaTitle = 'APLI Mail Untuk Travel Umrah dan Haji | Email Personal Jamaah + Inbox Viewer';
-    $metaDescription = 'APLI Mail membantu travel membuat email personal untuk setiap jamaah, menerima email masuk secara aman, dan mengelola inbox terpusat dengan viewer modern. Tersedia paket Free, Silver, dan Gold.';
-    $metaKeywords = 'email travel umrah, email personal jamaah, sistem email travel, inbox viewer travel, email haji umrah, catch all email saas';
-    $heroImagePrompt = rawurlencode('professional SaaS email dashboard for travel agency managing personal pilgrim email inboxes, modern blue interface, realistic laptop and mobile screen, premium business website hero, clean office lighting, highly detailed');
+    $metaDescription = 'APLI Mail membantu travel membuat email personal untuk setiap jamaah, menerima email masuk secara aman, dan mengelola seluruh komunikasi dari satu portal email modern. Tersedia paket Free, Silver, dan Gold.';
+    $metaKeywords = 'email travel umrah, email personal jamaah, sistem email travel, portal email travel, email haji umrah, email jamaah travel';
+    $heroImagePrompt = rawurlencode('professional travel email management platform for pilgrimage agency, modern blue business interface, realistic laptop and mobile screen, premium website hero, clean office lighting, highly detailed');
     $heroImageUrl = "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt={$heroImagePrompt}&image_size=landscape_16_9";
+    $whatsAppNumber = '6287766116599';
+    $whatsAppBaseMessage = 'Halo, saya tertarik dengan APLI Mail untuk kebutuhan email personal jamaah dan ingin konsultasi paket subscription.';
+    $whatsAppUrl = 'https://wa.me/'.$whatsAppNumber.'?text='.rawurlencode($whatsAppBaseMessage);
     $plans = [
         [
             'name' => 'Paket Free',
@@ -17,7 +20,7 @@
             'limits' => [
                 '2 inbox aktif',
                 '10 email received',
-                'Viewer token per group',
+                'Akses aman untuk tim travel',
                 'Cocok untuk uji coba tim kecil',
             ],
             'badge' => 'Starter',
@@ -31,7 +34,7 @@
                 '1000 inbox aktif',
                 'Unlimited email received',
                 'Import inbox CSV/XLSX',
-                'Dashboard admin group',
+                'Portal pengelolaan inbox',
             ],
             'badge' => 'Populer',
         ],
@@ -52,7 +55,7 @@
     $faqs = [
         [
             'question' => 'APLI Mail cocok untuk bisnis apa?',
-            'answer' => 'APLI Mail paling cocok untuk travel umrah dan haji yang ingin membuat email personal untuk setiap jamaah, memusatkan email masuk, dan membagikan akses viewer yang aman ke tim operasional.',
+            'answer' => 'APLI Mail paling cocok untuk travel umrah dan haji yang ingin membuat email personal untuk setiap jamaah, memusatkan email masuk, dan membagikan akses yang aman ke tim operasional.',
         ],
         [
             'question' => 'Apakah setiap jamaah bisa memiliki email sendiri?',
@@ -64,7 +67,7 @@
         ],
         [
             'question' => 'Apakah import inbox bisa dilakukan sekaligus?',
-            'answer' => 'Bisa. Admin SaaS maupun admin group dapat melakukan import inbox massal melalui file CSV atau XLSX sesuai hak akses masing-masing.',
+            'answer' => 'Bisa. Tim Anda dapat melakukan import inbox massal melalui file CSV atau XLSX agar pembuatan email jamaah berlangsung jauh lebih cepat.',
         ],
     ];
     $schema = [
@@ -142,7 +145,7 @@
                 <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 text-sm font-bold text-white shadow-lg shadow-blue-600/25">AM</span>
                 <div>
                     <p class="text-sm font-semibold">APLI Mail</p>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Email Personal Jamaah & Viewer SaaS</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Email Personal Jamaah Untuk Travel</p>
                 </div>
             </div>
 
@@ -158,9 +161,9 @@
                     Mode Gelap
                 </button>
                 @auth
-                    <a href="{{ route('dashboard', absolute: false) }}" class="btn-primary px-4 py-2.5">Dashboard</a>
+                    <a href="{{ route('dashboard', absolute: false) }}" class="btn-primary px-4 py-2.5">Buka Portal</a>
                 @else
-                    <a href="{{ route('login', absolute: false) }}" class="btn-primary px-4 py-2.5">Login Admin</a>
+                    <a href="{{ route('login', absolute: false) }}" class="btn-primary px-4 py-2.5">Masuk Portal</a>
                 @endauth
             </div>
         </header>
@@ -168,16 +171,16 @@
         <main class="relative mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
             <section class="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
                 <div>
-                    <p class="section-kicker">Landing Page Travel Email SaaS</p>
+                    <p class="section-kicker">Solusi Email Travel</p>
                     <h1 class="mt-6 max-w-4xl text-5xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-6xl">
                         Buat email personal untuk setiap jamaah dan kelola semua inbox travel dari satu dashboard.
                     </h1>
                     <p class="mt-6 max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300">
-                        APLI Mail membantu travel umrah dan haji membuat inbox personal per jamaah, menerima email penting seperti visa, tiket, manifest, dan notifikasi pembayaran, lalu membukanya lewat viewer modern yang aman dan mudah dipantau tim operasional.
+                        APLI Mail membantu travel umrah dan haji membuat inbox personal per jamaah, menerima email penting seperti visa, tiket, manifest, dan notifikasi pembayaran, lalu memantaunya lewat portal email yang aman dan mudah dipakai tim operasional.
                     </p>
 
                     <div class="mt-8 flex flex-wrap gap-4">
-                        <a href="#paket" class="btn-primary">Lihat Paket Subscription</a>
+                        <a href="{{ $whatsAppUrl }}" target="_blank" rel="noopener noreferrer" class="btn-primary">Hubungi Via WhatsApp</a>
                         <a href="#use-case" class="btn-secondary">Lihat Use Case Travel</a>
                     </div>
 
@@ -188,11 +191,11 @@
                         </div>
                         <div class="glass-banner">
                             <p class="text-3xl font-semibold text-slate-950 dark:text-white">Terpusat</p>
-                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Tim travel memantau semua inbox dari dashboard group tanpa akses manual satu per satu.</p>
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Tim travel memantau semua inbox dari satu portal tanpa membuka akun satu per satu.</p>
                         </div>
                         <div class="glass-banner">
                             <p class="text-3xl font-semibold text-slate-950 dark:text-white">Aman</p>
-                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Viewer token per group membuat akses email lebih terkontrol untuk masing-masing customer.</p>
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Akses email tetap terkontrol sehingga setiap tim hanya melihat inbox yang memang mereka kelola.</p>
                         </div>
                     </div>
                 </div>
@@ -208,7 +211,7 @@
 
                     <img
                         src="{{ $heroImageUrl }}"
-                        alt="Dashboard APLI Mail untuk travel yang mengelola email personal jamaah"
+                        alt="Portal email APLI Mail untuk travel yang mengelola email personal jamaah"
                         class="h-auto w-full rounded-[1.8rem] border border-white/70 object-cover shadow-sm dark:border-slate-800/80"
                     />
 
@@ -248,7 +251,7 @@
                 <div class="max-w-3xl">
                     <p class="section-kicker">Fitur Utama</p>
                     <h2 class="section-title">Satu sistem email untuk operasional travel yang cepat, rapi, dan mudah dijual ke pelanggan</h2>
-                    <p class="section-copy">Landing page ini menempatkan APLI Mail sebagai solusi email personal jamaah, inbox monitoring, dan akses viewer terpusat untuk travel, umrah, haji, pendidikan, maupun customer service berbasis inbox massal.</p>
+                    <p class="section-copy">APLI Mail dirancang sebagai solusi email personal jamaah, pemantauan inbox, dan pengelolaan komunikasi terpusat untuk travel, umrah, haji, pendidikan, maupun layanan pelanggan.</p>
                 </div>
 
                 <div class="mt-8 grid gap-6 lg:grid-cols-3">
@@ -258,14 +261,14 @@
                         <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">Travel dapat membuat email untuk masing-masing jamaah, marketing, ticketing, visa, handling, atau cabang agar informasi penting tidak tercampur.</p>
                     </div>
                     <div class="panel-card">
-                        <p class="text-sm font-semibold text-blue-600">Inbox Viewer Modern</p>
+                        <p class="text-sm font-semibold text-blue-600">Portal Email Modern</p>
                         <h3 class="mt-3 text-xl font-semibold text-slate-950 dark:text-white">Buka email dengan cepat tanpa setup rumit</h3>
-                        <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">Daftar email tampil rapi dengan pencarian, preview isi, lampiran, dark mode, dan URL viewer bertoken untuk akses yang lebih aman.</p>
+                        <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">Daftar email tampil rapi dengan pencarian, preview isi, lampiran, dan tampilan yang nyaman sehingga tim bisa bekerja lebih cepat setiap hari.</p>
                     </div>
                     <div class="panel-card">
-                        <p class="text-sm font-semibold text-blue-600">Multi Tenant SaaS</p>
-                        <h3 class="mt-3 text-xl font-semibold text-slate-950 dark:text-white">Group pelanggan, token viewer, dan admin group</h3>
-                        <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">Admin SaaS membuat customer baru, menetapkan viewer token, lalu menyerahkan pengelolaan inbox ke admin group masing-masing.</p>
+                        <p class="text-sm font-semibold text-blue-600">Mudah Dikelola</p>
+                        <h3 class="mt-3 text-xl font-semibold text-slate-950 dark:text-white">Setiap tim punya akses yang rapi dan terarah</h3>
+                        <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">Pemilik usaha dapat membagi akses sesuai kebutuhan sehingga pengelolaan inbox tetap tertib ketika jumlah jamaah dan tim terus bertambah.</p>
                     </div>
                 </div>
             </section>
@@ -275,9 +278,9 @@
                     <div class="max-w-3xl">
                         <p class="section-kicker">Paket Subscription</p>
                         <h2 class="section-title">Pilih paket sesuai skala travel dan jumlah inbox jamaah yang Anda butuhkan</h2>
-                        <p class="section-copy">Semua paket dirancang untuk operasional travel yang membutuhkan email received terpusat, viewer cepat, dan pembagian akses per customer atau per tim.</p>
+                        <p class="section-copy">Semua paket dirancang untuk operasional travel yang membutuhkan email masuk terpusat, portal email yang cepat, dan pembagian akses yang rapi untuk setiap tim.</p>
                     </div>
-                    <a href="{{ route('login', absolute: false) }}" class="btn-secondary">Diskusikan Setup Admin</a>
+                    <a href="{{ $whatsAppUrl }}" target="_blank" rel="noopener noreferrer" class="btn-secondary">Diskusikan Via WhatsApp</a>
                 </div>
 
                 <div class="mt-8 grid gap-6 xl:grid-cols-3">
@@ -303,7 +306,7 @@
                             </div>
 
                             <div class="mt-8 flex gap-3">
-                                <a href="{{ route('login', absolute: false) }}" class="btn-primary w-full">Pilih Paket</a>
+                                <a href="https://wa.me/{{ $whatsAppNumber }}?text={{ rawurlencode('Halo, saya ingin berlangganan '.$plan['name'].' di APLI Mail untuk kebutuhan email personal jamaah.') }}" target="_blank" rel="noopener noreferrer" class="btn-primary w-full">Pilih Paket</a>
                             </div>
                         </article>
                     @endforeach
@@ -326,7 +329,7 @@
                         </div>
                         <div class="helper-item">
                             <span class="helper-item-dot"></span>
-                            <p>Group viewer token memudahkan pembagian akses ke masing-masing customer atau divisi.</p>
+                            <p>Akses tiap tim dapat diatur dengan rapi agar pekerjaan operasional tidak saling bertabrakan.</p>
                         </div>
                         <div class="helper-item">
                             <span class="helper-item-dot"></span>
@@ -337,23 +340,23 @@
 
                 <div class="panel-card">
                     <p class="section-kicker">Alur Operasional</p>
-                    <h2 class="section-title">Dari onboarding customer sampai inbox jamaah aktif dalam satu dashboard</h2>
+                    <h2 class="section-title">Dari pendaftaran sampai inbox jamaah aktif dalam satu portal</h2>
                     <div class="mt-6 space-y-4">
                         <div class="detail-pair">
-                            <p class="detail-pair-label">1. Setup customer</p>
-                            <p class="detail-pair-value">Admin SaaS membuat group baru, viewer token, dan admin group dari satu form onboarding.</p>
+                            <p class="detail-pair-label">1. Aktivasi layanan</p>
+                            <p class="detail-pair-value">Tim Anda menyiapkan akun usaha dan struktur akses dalam satu alur yang ringkas.</p>
                         </div>
                         <div class="detail-pair">
                             <p class="detail-pair-label">2. Import inbox</p>
-                            <p class="detail-pair-value">Admin group mengimpor inbox jamaah, tim ticketing, visa, atau handling via CSV/XLSX.</p>
+                            <p class="detail-pair-value">Inbox jamaah, tim ticketing, visa, atau handling dapat diimpor sekaligus melalui file CSV atau XLSX.</p>
                         </div>
                         <div class="detail-pair">
-                            <p class="detail-pair-label">3. Email received</p>
-                            <p class="detail-pair-value">Semua email masuk diproses, disimpan, dan siap dibaca melalui viewer inbox bertoken.</p>
+                            <p class="detail-pair-label">3. Email masuk</p>
+                            <p class="detail-pair-value">Semua email masuk diproses, disimpan, dan siap dibaca melalui portal email yang aman.</p>
                         </div>
                         <div class="detail-pair">
                             <p class="detail-pair-label">4. Monitoring</p>
-                            <p class="detail-pair-value">Tim melihat statistik email, lampiran, dan daftar inbox terbaru dari panel admin yang rapi.</p>
+                            <p class="detail-pair-value">Tim melihat statistik email, lampiran, dan inbox terbaru dari panel yang rapi dan mudah dipahami.</p>
                         </div>
                     </div>
                 </div>
@@ -365,7 +368,7 @@
                         <div>
                             <p class="section-kicker">Kenapa APLI Mail</p>
                             <h2 class="section-title">Bangun layanan email travel yang terlihat profesional di mata jamaah dan tim internal</h2>
-                            <p class="section-copy">Ketika setiap jamaah memiliki email personal dan setiap pesan bisa dipantau dari viewer modern, travel lebih mudah menjaga informasi keberangkatan tetap rapi, cepat, dan mudah ditelusuri.</p>
+                            <p class="section-copy">Ketika setiap jamaah memiliki email personal dan setiap pesan bisa dipantau dari portal email modern, travel lebih mudah menjaga informasi keberangkatan tetap rapi, cepat, dan mudah ditelusuri.</p>
                         </div>
                         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                             <div class="glass-banner">
@@ -385,7 +388,7 @@
                 <div class="max-w-3xl">
                     <p class="section-kicker">FAQ</p>
                     <h2 class="section-title">Pertanyaan yang sering ditanyakan calon pelanggan</h2>
-                    <p class="section-copy">Bagian FAQ ini juga membantu SEO karena menjawab intent pencarian seputar email travel, inbox jamaah, dan sistem viewer SaaS.</p>
+                    <p class="section-copy">Bagian FAQ ini membantu calon pelanggan memahami manfaat layanan dengan cepat, sekaligus memperkuat pencarian organik seputar email travel dan inbox jamaah.</p>
                 </div>
 
                 <div class="mt-8 grid gap-4">
@@ -404,8 +407,8 @@
                     <h2 class="section-title mx-auto max-w-3xl">Siapkan email personal jamaah dan operasional travel Anda mulai hari ini</h2>
                     <p class="section-copy mx-auto">Mulai dari Paket Free untuk uji coba cepat, lalu tingkatkan ke Silver atau Gold saat jumlah inbox dan kebutuhan email received terus bertambah.</p>
                     <div class="mt-8 flex flex-wrap justify-center gap-4">
-                        <a href="#paket" class="btn-primary">Pilih Paket Sekarang</a>
-                        <a href="{{ route('login', absolute: false) }}" class="btn-secondary">Masuk Ke Admin</a>
+                        <a href="{{ $whatsAppUrl }}" target="_blank" rel="noopener noreferrer" class="btn-primary">Chat WhatsApp Sekarang</a>
+                        <a href="{{ route('login', absolute: false) }}" class="btn-secondary">Masuk Ke Portal</a>
                     </div>
                 </div>
             </section>

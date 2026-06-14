@@ -15,6 +15,9 @@ class LandingPageTest extends TestCase
             ->assertSee('Paket Silver')
             ->assertSee('Paket Gold')
             ->assertSee('Email Personal Jamaah')
-            ->assertSee('application/ld+json', false);
+            ->assertSee('application/ld+json', false)
+            ->assertDontSee('Multi Tenant SaaS')
+            ->assertDontSee('viewer token')
+            ->assertDontSee('admin group');
     }
 }
